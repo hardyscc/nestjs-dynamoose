@@ -1,0 +1,60 @@
+{
+  "name": "nestjs-dynamoose",
+  "version": "0.0.1",
+  "description": "Nest - modern, fast, powerful node.js web framework (@dynamoose)",
+  "author": "Hardys",
+  "repository": "https://github.com/hardyscc/nestjs-dynamoose.git",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint \"lib/**/*.ts\" --fix",
+    "format": "prettier \"lib/**/*.ts\" --write",
+    "build": "rm -rf dist && tsc -p tsconfig.json",
+    "precommit": "lint-staged",
+    "prepublish:npm": "npm run build",
+    "publish:npm": "npm publish --access public",
+    "prepublish:next": "npm run build",
+    "publish:next": "npm publish --access public --tag next",
+    "prerelease": "npm run build",
+    "release": "release-it"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "8.3.5",
+    "@commitlint/config-angular": "8.3.4",
+    "@nestjs/common": "7.0.3",
+    "@nestjs/core": "7.0.3",
+    "@types/node": "11.15.0",
+    "@typescript-eslint/eslint-plugin": "2.24.0",
+    "@typescript-eslint/parser": "2.24.0",
+    "dynamoose": "^2.0.0-beta.4",
+    "eslint": "6.8.0",
+    "eslint-config-prettier": "6.10.0",
+    "eslint-plugin-import": "2.20.1",
+    "husky": "4.2.3",
+    "lint-staged": "10.0.8",
+    "prettier": "1.19.1",
+    "reflect-metadata": "0.1.13",
+    "release-it": "13.1.1",
+    "rxjs": "6.5.4",
+    "rxjs-compat": "6.5.4",
+    "ts-node": "8.7.0",
+    "typescript": "3.8.3"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^6.0.0 || ^7.0.0",
+    "@nestjs/core": "^6.0.0 || ^7.0.0",
+    "dynamoose": "^2.0.0-beta.4",
+    "reflect-metadata": "^0.1.12",
+    "rxjs": "^6.0.0"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -c .commitlintrc.json -E HUSKY_GIT_PARAMS"
+    }
+  }
+}
