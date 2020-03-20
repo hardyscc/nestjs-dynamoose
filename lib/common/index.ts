@@ -1,2 +1,2 @@
 export * from './dynamoose.decorators';
-export { getConnectionToken, getModelToken } from './dynamoose.utils';
+export { getModelToken } from './dynamoose.utils';
