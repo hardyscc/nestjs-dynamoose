@@ -26,27 +26,87 @@
 
 ## Description
 
-[Dynamoose](http://dynamoosejs.com/) module for [Nest](https://github.com/nestjs/nest).
+[Dynamoose](https://dynamoosejs.com/) module for [Nest](https://github.com/nestjs/nest).
 
 ## Installation
 
 ```bash
-$ npm i --save @nestjs/dynamoose dynamoose
+$ npm i --save nestjs-dynamoose dynamoose@beta
 ```
 
 ## Quick Start
 
-[Overview & Tutorial](https://docs.nestjs.com/techniques/mongodb)
+App Module:
+
+```ts
+import { DynamooseModule } from 'nestjs-dynamoose';
+...
+
+@Module({
+  imports: [
+    ...
+    DynamooseModule.forRoot({
+      model: {
+        create: false
+      },
+    }),
+    UserModule,
+  ],
+})
+export class AppModule {
+```
+
+User Schema:
+
+```ts
+import * as dynamoose from 'dynamoose';
+
+export const UserSchema = new dynamoose.Schema({
+  id: String,
+  name: String,
+});
+```
+
+User Module:
+
+```ts
+import { UserSchema } from './schema/user.schema'
+import { DynamooseModule } from 'nestjs-dynamoose';
+...
+
+@Module({
+  imports: [
+    DynamooseModule.forFeature([
+      { name: 'User', schema: UserSchema },
+    ]),
+  ],
+  ...
+})
+export class UserModule {}
+```
+
+User Service
+
+```ts
+import { InjectModel } from 'nestjs-dynamoose';
+...
+
+@Injectable()
+export class UserService {
+  constructor(@InjectModel('User') private userModel: any) {}
+
+  create(input: CreateUserInput) {
+    return this.notificationModel.create({
+      ...input,
+      id: uuid.v4(),
+    }) as Promise<User>;
+  }
+}
+```
 
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
 
 ## License
 
