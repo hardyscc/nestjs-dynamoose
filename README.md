@@ -93,13 +93,13 @@ import { InjectModel, Model } from 'nestjs-dynamoose';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('User') private userModel: any) {}
+  constructor(@InjectModel('User') private userModel: Model<User>) {}
 
   create(input: CreateUserInput) {
     return this.userModel.create({
       ...input,
       id: uuid.v4(),
-    }) as Promise<User>;
+    });
   }
 }
 ```
