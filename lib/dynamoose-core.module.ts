@@ -6,10 +6,13 @@ import { DynamooseModuleOptions } from './interfaces/dynamoose-options.interface
 @Global()
 @Module({})
 export class DynamooseCoreModule {
-  static forRoot(
-    options: DynamooseModuleOptions = { model: {} },
-  ): DynamicModule {
-    dynamoose.Model.defaults = options.model;
+  static forRoot(options: DynamooseModuleOptions = {}): DynamicModule {
+    if (options.aws) {
+      dynamoose.aws.sdk.config.update(options.aws);
+    }
+    if (options.model) {
+      dynamoose.Model.defaults = options.model;
+    }
 
     return {
       module: DynamooseCoreModule,

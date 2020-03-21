@@ -1,5 +1,10 @@
 import { ModelOptions } from './model-options.interface';
 
-export interface DynamooseModuleOptions extends Record<string, any> {
-  model: ModelOptions;
+export interface DynamooseModuleOptions {
+  aws?: {
+    accessKeyId?: string;
+    secretAccessKey?: string;
+    region?: string;
+  };
+  model?: ModelOptions;
 }
