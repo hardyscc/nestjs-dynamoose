@@ -59,9 +59,9 @@ export class AppModule {
 User Schema:
 
 ```ts
-import * as dynamoose from 'dynamoose';
+import { Schema } from 'dynamoose';
 
-export const UserSchema = new dynamoose.Schema({
+export const UserSchema = new Schema({
   id: String,
   name: String,
 });
@@ -88,7 +88,7 @@ export class UserModule {}
 User Service
 
 ```ts
-import { InjectModel } from 'nestjs-dynamoose';
+import { InjectModel, Model } from 'nestjs-dynamoose';
 ...
 
 @Injectable()
@@ -96,7 +96,7 @@ export class UserService {
   constructor(@InjectModel('User') private userModel: any) {}
 
   create(input: CreateUserInput) {
-    return this.notificationModel.create({
+    return this.userModel.create({
       ...input,
       id: uuid.v4(),
     }) as Promise<User>;
