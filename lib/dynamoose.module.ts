@@ -6,9 +6,7 @@ import { DynamooseModuleOptions } from './interfaces/dynamoose-options.interface
 
 @Module({})
 export class DynamooseModule {
-  static forRoot(
-    options: DynamooseModuleOptions = { model: {} },
-  ): DynamicModule {
+  static forRoot(options: DynamooseModuleOptions = {}): DynamicModule {
     return {
       module: DynamooseModule,
       imports: [DynamooseCoreModule.forRoot(options)],
