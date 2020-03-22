@@ -7,6 +7,7 @@ export interface DynamooseModuleOptions {
     secretAccessKey?: string;
     region?: string;
   };
+  local?: boolean | string;
   model?: ModelOptions;
 }
 
