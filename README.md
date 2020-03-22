@@ -31,81 +31,83 @@
 ## Installation
 
 ```bash
-$ npm i --save nestjs-dynamoose dynamoose@beta
+$ npm install nestjs-dynamoose dynamoose@beta
 ```
 
 ## Quick Start
 
-App Module:
+A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) project has been created to demo the usage of this library, the following are some code gist.
 
-```ts
-import { DynamooseModule } from 'nestjs-dynamoose';
-...
+1. App Module:
 
-@Module({
-  imports: [
-    ...
-    DynamooseModule.forRoot({
-      model: {
-        create: false
-      },
-    }),
-    UserModule,
-  ],
-})
-export class AppModule {
-```
+   ```ts
+   import { DynamooseModule } from 'nestjs-dynamoose';
+   ...
 
-User Schema:
+   @Module({
+     imports: [
+       ...
+       DynamooseModule.forRoot({
+         model: {
+           create: false
+         },
+       }),
+       UserModule,
+     ],
+   })
+   export class AppModule {
+   ```
 
-```ts
-import { Schema } from 'dynamoose';
-import { SchemaAttributes } from 'nestjs-dynamoose';
+2. User Schema:
 
-const schemaAttributes: SchemaAttributes = {
-  id: String,
-  name: String,
-};
-export const UserSchema = new Schema(schemaAttributes);
-```
+   ```ts
+   import { Schema } from 'dynamoose';
+   import { SchemaAttributes } from 'nestjs-dynamoose';
 
-User Module:
+   const schemaAttributes: SchemaAttributes = {
+     id: String,
+     name: String,
+   };
+   export const UserSchema = new Schema(schemaAttributes);
+   ```
 
-```ts
-import { UserSchema } from './schema/user.schema';
-import { DynamooseModule } from 'nestjs-dynamoose';
-...
+3. User Module:
 
-@Module({
-  imports: [
-    DynamooseModule.forFeature([
-      { name: 'User', schema: UserSchema },
-    ]),
-  ],
-  ...
-})
-export class UserModule {}
-```
+   ```ts
+   import { UserSchema } from './schema/user.schema';
+   import { DynamooseModule } from 'nestjs-dynamoose';
+   ...
 
-User Service
+   @Module({
+     imports: [
+       DynamooseModule.forFeature([
+         { name: 'User', schema: UserSchema },
+       ]),
+     ],
+     ...
+   })
+   export class UserModule {}
+   ```
 
-```ts
-import { InjectModel, Model } from 'nestjs-dynamoose';
-import * as uuid from 'uuid';
-...
+4. User Service
 
-@Injectable()
-export class UserService {
-  constructor(@InjectModel('User') private userModel: Model<User>) {}
+   ```ts
+   import { InjectModel, Model } from 'nestjs-dynamoose';
+   import * as uuid from 'uuid';
+   ...
 
-  create(input: CreateUserInput) {
-    return this.userModel.create({
-      ...input,
-      id: uuid.v4(),
-    });
-  }
-}
-```
+   @Injectable()
+   export class UserService {
+     constructor(@InjectModel('User') private userModel: Model<User>) {}
+
+     create(input: CreateUserInput) {
+       return this.userModel.create({
+         ...input,
+         id: uuid.v4(),
+       });
+     }
+   }
+   ```
 
 ## Support
 
