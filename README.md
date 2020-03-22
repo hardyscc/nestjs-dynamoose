@@ -60,17 +60,19 @@ User Schema:
 
 ```ts
 import { Schema } from 'dynamoose';
+import { SchemaAttributes } from 'nestjs-dynamoose';
 
-export const UserSchema = new Schema({
+const schemaAttributes: SchemaAttributes = {
   id: String,
   name: String,
-});
+};
+export const UserSchema = new Schema(schemaAttributes);
 ```
 
 User Module:
 
 ```ts
-import { UserSchema } from './schema/user.schema'
+import { UserSchema } from './schema/user.schema';
 import { DynamooseModule } from 'nestjs-dynamoose';
 ...
 
@@ -89,6 +91,7 @@ User Service
 
 ```ts
 import { InjectModel, Model } from 'nestjs-dynamoose';
+import * as uuid from 'uuid';
 ...
 
 @Injectable()
