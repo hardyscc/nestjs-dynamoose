@@ -15,6 +15,13 @@ function initialization(options: DynamooseModuleOptions) {
   if (options.aws) {
     dynamoose.aws.sdk.config.update(options.aws);
   }
+  if (options.local) {
+    if (typeof options.local !== 'string') {
+      dynamoose.aws.ddb.local();
+    } else {
+      dynamoose.aws.ddb.local(options.local);
+    }
+  }
   if (options.model) {
     dynamoose.Model.defaults = options.model;
   }
