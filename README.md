@@ -38,10 +38,11 @@ $ npm install nestjs-dynamoose dynamoose@beta
 
 A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) project has been created to demo the usage of this library, the following are some code gist.
 
-1. App Module:
+1. App Module: `src/app.schems.ts`
 
    ```ts
    import { DynamooseModule } from 'nestjs-dynamoose';
+   import { UserModule } from './user/user.module';
    ...
 
    @Module({
@@ -58,20 +59,7 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
    export class AppModule {
    ```
 
-2. User Schema:
-
-   ```ts
-   import { Schema } from 'dynamoose';
-   import { SchemaAttributes } from 'nestjs-dynamoose';
-
-   const schemaAttributes: SchemaAttributes = {
-     id: String,
-     name: String,
-   };
-   export const UserSchema = new Schema(schemaAttributes);
-   ```
-
-3. User Module:
+2. User Module: `src/user/user.module.ts`
 
    ```ts
    import { UserSchema } from './schema/user.schema';
@@ -89,7 +77,20 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
    export class UserModule {}
    ```
 
-4. User Model
+3. User Schema: `src/user/schema/user.schems.ts`
+
+   ```ts
+   import { Schema } from 'dynamoose';
+   import { SchemaAttributes } from 'nestjs-dynamoose';
+
+   const schemaAttributes: SchemaAttributes = {
+     id: String,
+     name: String,
+   };
+   export const UserSchema = new Schema(schemaAttributes);
+   ```
+
+4. User Model: `src/user/model/user.model.ts`
 
    ```ts
    import { Field, ID, ObjectType } from '@nestjs/graphql';
@@ -104,7 +105,7 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
    }
    ```
 
-5. Create User Input
+5. Create User Input: `src/user/model/create-user.input.ts`
 
    ```ts
    import { Field, InputType } from '@nestjs/graphql';
@@ -116,11 +117,11 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
    }
    ```
 
-6. User Service
+6. User Service: `src/user/service/user.service.ts`
 
    ```ts
    import { InjectModel, Model } from 'nestjs-dynamoose';
-   import { User } from './model/user.model';
+   import { User } from '../model/user.model';
    import * as uuid from 'uuid';
    ...
 
@@ -140,7 +141,7 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
    }
    ```
 
-7. User Resolver
+7. User Resolver: `src/user/resolver/user.resolver.ts`
 
    ```ts
    import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
