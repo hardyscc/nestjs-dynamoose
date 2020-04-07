@@ -57,8 +57,8 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
 
    ```ts
    import { DynamooseModule } from 'nestjs-dynamoose';
-   import { UserSchema } from './schema/user.schema';
-   import { UserService } from './service/user.service';
+   import { UserSchema } from './user.schema';
+   import { UserService } from './user.service';
 
    @Module({
      imports: [
@@ -72,7 +72,7 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
    export class UserModule {}
    ```
 
-3. User Schema: `src/user/schema/user.schema.ts`
+3. User Schema: `src/user/user.schema.ts`
 
    ```ts
    import { Schema } from 'dynamoose';
@@ -90,7 +90,7 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
    export const UserSchema = new Schema(schemaAttributes);
    ```
 
-4. User Service: `src/user/service/user.service.ts`
+4. User Service: `src/user/user.service.ts`
 
    ```ts
    import { Injectable } from '@nestjs/common';
