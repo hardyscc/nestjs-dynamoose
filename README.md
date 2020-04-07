@@ -150,11 +150,11 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
 
    @Resolver(() => User)
    export class UserResolver {
-     constructor(private readonly UserService: UserService) {}
+     constructor(private readonly UserService: userService) {}
 
      @Mutation(() => User)
      createUser(@Args('input') input: CreateUserInput) {
-       return this.UserService.create(input);
+       return this.userService.create(input);
      }
    }
    ```
