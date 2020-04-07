@@ -48,11 +48,7 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
    @Module({
      imports: [
        ...
-       DynamooseModule.forRoot({
-         model: {
-           create: false
-         },
-       }),
+       DynamooseModule.forRoot(),
        UserModule,
      ],
    })
