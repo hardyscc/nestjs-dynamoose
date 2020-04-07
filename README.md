@@ -38,7 +38,7 @@ $ npm install nestjs-dynamoose dynamoose@beta
 
 A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) project has been created to demo the usage of this library, the following are some code gist.
 
-1. App Module: `src/app.schems.ts`
+1. App Module: `src/app.module.ts`
 
    ```ts
    import { DynamooseModule } from 'nestjs-dynamoose';
@@ -77,7 +77,7 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
    export class UserModule {}
    ```
 
-3. User Schema: `src/user/schema/user.schems.ts`
+3. User Schema: `src/user/schema/user.schema.ts`
 
    ```ts
    import { Schema } from 'dynamoose';
