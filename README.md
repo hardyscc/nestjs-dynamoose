@@ -43,11 +43,9 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
    ```ts
    import { DynamooseModule } from 'nestjs-dynamoose';
    import { UserModule } from './user/user.module';
-   ...
 
    @Module({
      imports: [
-       ...
        DynamooseModule.forRoot(),
        UserModule,
      ],
@@ -58,17 +56,18 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
 2. User Module: `src/user/user.module.ts`
 
    ```ts
-   import { UserSchema } from './schema/user.schema';
    import { DynamooseModule } from 'nestjs-dynamoose';
-   ...
+   import { UserSchema } from './schema/user.schema';
+   import { UserService } from './service/user.service';
 
    @Module({
      imports: [
-       DynamooseModule.forFeature([
-         { name: 'User', schema: UserSchema },
-       ]),
+       DynamooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
      ],
-     ...
+     providers: [
+       UserService,
+       ...
+     ],
    })
    export class UserModule {}
    ```
@@ -80,78 +79,54 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
    import { SchemaAttributes } from 'nestjs-dynamoose';
 
    const schemaAttributes: SchemaAttributes = {
-     id: String,
-     name: String,
+     id: {
+       type: String,
+       hashKey: true,
+     },
+     name: {
+       type: String,
+     },
    };
    export const UserSchema = new Schema(schemaAttributes);
    ```
 
-4. User Model: `src/user/model/user.model.ts`
+4. User Service: `src/user/service/user.service.ts`
 
    ```ts
-   import { Field, ID, ObjectType } from '@nestjs/graphql';
-
-   @ObjectType()
-   export class User {
-     @Field(() => ID)
-     id: string;
-
-     @Field()
-     name: string;
-   }
-   ```
-
-5. Create User Input: `src/user/model/create-user.input.ts`
-
-   ```ts
-   import { Field, InputType } from '@nestjs/graphql';
-
-   @InputType()
-   export class CreateUserInput {
-     @Field()
-     name: string;
-   }
-   ```
-
-6. User Service: `src/user/service/user.service.ts`
-
-   ```ts
+   import { Injectable } from '@nestjs/common';
    import { InjectModel, Model } from 'nestjs-dynamoose';
-   import { User } from '../model/user.model';
    import * as uuid from 'uuid';
-   ...
+
+   type UserKey = {
+     id: string;
+   };
+
+   type UserInput = {
+     name: string;
+   };
+
+   type User = UserKey & UserInput;
 
    @Injectable()
    export class UserService {
      constructor(
        @InjectModel('User')
-       private userModel: Model<User, string>
+       private userModel: Model<User, UserKey>,
      ) {}
 
-     create(input: CreateUserInput) {
+     create(input: UserInput) {
        return this.userModel.create({
          ...input,
          id: uuid.v4(),
        });
      }
-   }
-   ```
 
-7. User Resolver: `src/user/resolver/user.resolver.ts`
+     update(key: UserKey, input: UserInput) {
+       return this.userModel.update(key, input);
+     }
 
-   ```ts
-   import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-   import { CreateUserInput } from '../model/create-user.input';
-   import { User } from '../model/user.model';
-   import { UserService } from '../service/user.service';
-
-   @Resolver(() => User)
-   export class UserResolver {
-     constructor(private readonly UserService: userService) {}
-
-     @Mutation(() => User)
-     createUser(@Args('input') input: CreateUserInput) {
-       return this.userService.create(input);
+     find() {
+       return this.userModel.scan().exec();
      }
    }
    ```
