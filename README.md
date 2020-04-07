@@ -98,7 +98,10 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
 
    @Injectable()
    export class UserService {
-     constructor(@InjectModel('User') private userModel: Model<User>) {}
+     constructor(
+       @InjectModel('User')
+       private userModel: Model<User, string>
+     ) {}
 
      create(input: CreateUserInput) {
        return this.userModel.create({
