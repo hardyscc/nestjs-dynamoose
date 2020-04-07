@@ -89,10 +89,38 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
    export class UserModule {}
    ```
 
-4. User Service
+4. User Model
+
+   ```ts
+   import { Field, ID, ObjectType } from '@nestjs/graphql';
+
+   @ObjectType()
+   export class User {
+     @Field(() => ID)
+     id: string;
+
+     @Field()
+     name: string;
+   }
+   ```
+
+5. Create User Input
+
+   ```ts
+   import { Field, InputType } from '@nestjs/graphql';
+
+   @InputType()
+   export class CreateUserInput {
+     @Field()
+     name: string;
+   }
+   ```
+
+6. User Service
 
    ```ts
    import { InjectModel, Model } from 'nestjs-dynamoose';
+   import { User } from './model/user.model';
    import * as uuid from 'uuid';
    ...
 
@@ -108,6 +136,25 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
          ...input,
          id: uuid.v4(),
        });
+     }
+   }
+   ```
+
+7. User Resolver
+
+   ```ts
+   import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+   import { CreateUserInput } from '../model/create-user.input';
+   import { User } from '../model/user.model';
+   import { UserService } from '../service/user.service';
+
+   @Resolver(() => User)
+   export class UserResolver {
+     constructor(private readonly UserService: UserService) {}
+
+     @Mutation(() => User)
+     createUser(@Args('input') input: CreateUserInput) {
+       return this.UserService.create(input);
      }
    }
    ```
