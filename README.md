@@ -38,35 +38,35 @@ $ npm install nestjs-dynamoose dynamoose@beta
 
 **1. Add import into your app module**
 
-   `src/app.module.ts`
-   ```ts
-   import { DynamooseModule } from 'nestjs-dynamoose';
-   import { UserModule } from './user/user.module';
+  `src/app.module.ts`
+  ```ts
+  import { DynamooseModule } from 'nestjs-dynamoose';
+  import { UserModule } from './user/user.module';
 
-   @Module({
-     imports: [
-       DynamooseModule.forRoot(),
-       UserModule,
-     ],
-   })
-   export class AppModule {
-   ```
-   
-   `forRoot()` optionally accepts the following options defined by `DynamooseModuleOptions`:
+  @Module({
+   imports: [
+     DynamooseModule.forRoot(),
+     UserModule,
+   ],
+  })
+  export class AppModule {
+  ```
 
-    ```ts
-    interface DynamooseModuleOptions {
-      aws?: {
-          accessKeyId?: string;
-          secretAccessKey?: string;
-          region?: string;
-      };
-      local?: boolean | string;
-      model?: ModelOptions;
-    }
-    ```
+  `forRoot()` optionally accepts the following options defined by `DynamooseModuleOptions`:
+
+  ```ts
+  interface DynamooseModuleOptions {
+    aws?: {
+        accessKeyId?: string;
+        secretAccessKey?: string;
+        region?: string;
+    };
+    local?: boolean | string;
+    model?: ModelOptions;
+  }
+  ```
     
-    There is also `forRootAsync(options: DynamooseModuleAsyncOptions)` if you want to use a factory with dependency injection.
+  There is also `forRootAsync(options: DynamooseModuleAsyncOptions)` if you want to use a factory with dependency injection.
   
 **2. Create a schema**
 
