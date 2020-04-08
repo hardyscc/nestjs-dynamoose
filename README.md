@@ -90,30 +90,30 @@ $ npm install nestjs-dynamoose dynamoose@beta
    export const UserSchema = new Schema(attributes);
    ```
    
-   `new Schema()` optionally accepts options defined by `SchemaOptions`:
-   
-    ```ts
-    interface SchemaOptions {
-      throughput?: boolean | {
-          read: number;
-          write: number;
-      } | 'ON_DEMAND';
-      useNativeBooleans?: boolean;
-      useDocumentTypes?: boolean;
-      timestamps?: boolean | {
-          createdAt: string;
-          updatedAt: string;
-      };
-      expires?: number | {
-          ttl: number;
-          attribute: string;
-          returnExpiredItems: boolean;
-      };
-      saveUnknown?: boolean;
-      attributeToDynamo?: (name: string, json: any, model: any, defaultFormatter: any) => any;
-      attributeFromDynamo?: (name: string, json: any, fallback: any) => any;
-    }
-    ```
+  `new Schema()` optionally accepts options defined by `SchemaOptions`:
+
+  ```ts
+  interface SchemaOptions {
+    throughput?: boolean | {
+        read: number;
+        write: number;
+    } | 'ON_DEMAND';
+    useNativeBooleans?: boolean;
+    useDocumentTypes?: boolean;
+    timestamps?: boolean | {
+        createdAt: string;
+        updatedAt: string;
+    };
+    expires?: number | {
+        ttl: number;
+        attribute: string;
+        returnExpiredItems: boolean;
+    };
+    saveUnknown?: boolean;
+    attributeToDynamo?: (name: string, json: any, model: any, defaultFormatter: any) => any;
+    attributeFromDynamo?: (name: string, json: any, fallback: any) => any;
+  }
+  ```
     
 **3. Add the models you want to inject to your modules**
 
