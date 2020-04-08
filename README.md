@@ -89,17 +89,17 @@ $ npm install nestjs-dynamoose dynamoose@beta --save
   };
   export const UserSchema = new Schema(attributes);
 
-  export interface UserSchemaKeys = {
+  export interface UserSchemaKey = {
     id: string;
   };
 
-  export interface UserSchemaAttributes extends UserKeys {
+  export interface UserSchemaAttributes extends UserKey {
     name: string;
     email?: string;
   };
   ```
   
-  `UserKeys` holds the hashKey/partition key and (optionally) the rangeKey/sort key. `UserAttributes` holds all other attributes. When creating this two interfaces and using when injecting your model you will have typechecking when using operations like `Model.update()`.
+  `UserKey` holds the hashKey/partition key and (optionally) the rangeKey/sort key. `UserAttributes` holds all other attributes. When creating this two interfaces and using when injecting your model you will have typechecking when using operations like `Model.update()`.
    
   `new Schema()` optionally accepts options defined by `SchemaOptions`:
 
@@ -156,26 +156,26 @@ $ npm install nestjs-dynamoose dynamoose@beta --save
    ```ts
     import { Injectable } from '@nestjs/common';
     import { InjectModel, Model } from 'nestjs-dynamoose';
-    import { UserSchemaKeys, UserSchemaAttributes } from './user/user.schema.ts';
+    import { UserSchemaKey, UserSchemaAttributes } from './user/user.schema.ts';
 
    
     @Injectable()
     export class UserService {
       constructor(
         @InjectModel('User')
-        private userModel: Model<UserSchemaAttributes, UserSchemaKeys>,
+        private userModel: Model<UserSchemaAttributes, UserSchemaKey>,
       ) {}
 
       create(attributes: UserSchemaAttributes) {
         return this.userModel.create(attributes);
       }
 
-      update(keys: UserKeys, updateObj: any) {
-        return this.userModel.update(keys, updateObj);
+      update(key: UserKey, updateObj: any) {
+        return this.userModel.update(key, updateObj);
       }
 
-      find(keys: UserKeys) {
-        return this.userModel.query(keys).exec();
+      findOne(key: UserKey) {
+        return this.userModel.query(key).exec();
       }
     }
    ```
