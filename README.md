@@ -157,7 +157,6 @@ $ npm install nestjs-dynamoose dynamoose@beta
     import { Injectable } from '@nestjs/common';
     import { InjectModel, Model } from 'nestjs-dynamoose';
     import { UserSchemaKeys, UserSchemaAttributes } from './user/user.schema.ts';
-    import * as uuid from 'uuid';
 
    
     @Injectable()
@@ -167,11 +166,8 @@ $ npm install nestjs-dynamoose dynamoose@beta
         private userModel: Model<UserSchemaAttributes, UserSchemaKeys>,
       ) {}
 
-      create() {
-        return this.userModel.create({
-          id: '123'
-          name: 'John Doe',
-        });
+      create(attributes: UserSchemaAttributes) {
+        return this.userModel.create(attributes);
       }
 
       update(keys: UserKeys, updateObj: any) {
