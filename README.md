@@ -31,7 +31,7 @@
 ## Installation
 
 ```bash
-$ npm install nestjs-dynamoose dynamoose@beta -S
+$ npm install nestjs-dynamoose dynamoose@beta --save
 ```
 
 ## Quick Start
