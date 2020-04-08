@@ -34,9 +34,10 @@
 $ npm install nestjs-dynamoose dynamoose@beta
 ```
 
-## Quick Start
-
+## Example
 A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) project has been created to demo the usage of this library, the following are some code gist.
+
+## Quick Start
 
 1. Add import into your app module: `src/app.module.ts`
 
@@ -55,20 +56,23 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
    
    `forRoot()` optionally accepts the following options defined by `DynamooseModuleOptions`:
 
-  ```ts
-  {
-    aws?: {
-        accessKeyId?: string;
-        secretAccessKey?: string;
-        region?: string;
-    };
-    local?: boolean | string;
-    model?: ModelOptions;
-  }
-  ```
+    ```ts
+    interface DynamooseModuleOptions {
+      aws?: {
+          accessKeyId?: string;
+          secretAccessKey?: string;
+          region?: string;
+      };
+      local?: boolean | string;
+      model?: ModelOptions;
+    }
+    ```
+    
+    There is also `forRootAsync(options: DynamooseModuleAsyncOptions)` if you want to use a factory with dependency injection.
   
-2. Create a schema, e.g. `src/user/user.schema.ts`:
+2. Create a schema
 
+   `src/user/user.schema.ts`:
    ```ts
    import { Schema } from 'dynamoose';
    import { SchemaAttributes } from 'nestjs-dynamoose';
@@ -87,8 +91,33 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
    };
    export const UserSchema = new Schema(schemaAttributes);
    ```
+   
+   `new Schema()` optionally accepts options defined by `SchemaOptions`:
+   
+   ```ts
+   interface SchemaOptions {
+      throughput?: boolean | {
+          read: number;
+          write: number;
+      } | 'ON_DEMAND';
+      useNativeBooleans?: boolean;
+      useDocumentTypes?: boolean;
+      timestamps?: boolean | {
+          createdAt: string;
+          updatedAt: string;
+      };
+      expires?: number | {
+          ttl: number;
+          attribute: string;
+          returnExpiredItems: boolean;
+      };
+      saveUnknown?: boolean;
+      attributeToDynamo?: (name: string, json: any, model: any, defaultFormatter: any) => any;
+      attributeFromDynamo?: (name: string, json: any, fallback: any) => any;
+  }
+  ```
 
-3. Add the models you want to inject to your modules, this can be a feature module (as shown below) or the root AppModule.
+3. Add the models you want to inject to your modules, this can be a feature module (as shown below) or within the root AppModule next to `DynamooseModule.forRoot()`.
 
   `src/user/user.module.ts`
   
@@ -108,11 +137,12 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
    })
    export class UserModule {}
    ```
+   
+   There is also `forFeatureAsync(factories?: AsyncModelFactory[])` if you want to use a factory with dependency injection.
 
 4. Inject your model
 
    `src/user/user.service.ts`
-   
    ```ts
     import { Injectable } from '@nestjs/common';
     import { InjectModel, Model } from 'nestjs-dynamoose';
