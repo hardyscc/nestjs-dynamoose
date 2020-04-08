@@ -115,8 +115,8 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
       saveUnknown?: boolean;
       attributeToDynamo?: (name: string, json: any, model: any, defaultFormatter: any) => any;
       attributeFromDynamo?: (name: string, json: any, fallback: any) => any;
-  }
-  ```
+    }
+    ```
 
 3. Add the models you want to inject to your modules
 
