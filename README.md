@@ -95,8 +95,8 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
    
    `new Schema()` optionally accepts options defined by `SchemaOptions`:
    
-   ```ts
-   interface SchemaOptions {
+    ```ts
+    interface SchemaOptions {
       throughput?: boolean | {
           read: number;
           write: number;
@@ -117,7 +117,7 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
       attributeFromDynamo?: (name: string, json: any, fallback: any) => any;
     }
     ```
-
+    
 **3. Add the models you want to inject to your modules**
 
    This can be a feature module (as shown below) or within the root AppModule next to `DynamooseModule.forRoot()`.
