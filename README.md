@@ -75,7 +75,7 @@ $ npm install nestjs-dynamoose dynamoose@beta
    import { Schema } from 'dynamoose';
    import { SchemaAttributes } from 'nestjs-dynamoose';
 
-   const schemaAttributes: SchemaAttributes = {
+   const attributes: SchemaAttributes = {
      id: {
        type: String,
        hashKey: true,
@@ -87,7 +87,7 @@ $ npm install nestjs-dynamoose dynamoose@beta
        type: String,
      }
    };
-   export const UserSchema = new Schema(schemaAttributes);
+   export const UserSchema = new Schema(attributes);
    ```
    
    `new Schema()` optionally accepts options defined by `SchemaOptions`:
