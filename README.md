@@ -70,25 +70,36 @@ $ npm install nestjs-dynamoose dynamoose@beta
   
 **2. Create a schema**
 
-   `src/user/user.schema.ts`
-   ```ts
-   import { Schema } from 'dynamoose';
-   import { SchemaAttributes } from 'nestjs-dynamoose';
+  `src/user/user.schema.ts`
+  ```ts
+  import { Schema } from 'dynamoose';
+  import { SchemaAttributes } from 'nestjs-dynamoose';
 
-   const attributes: SchemaAttributes = {
-     id: {
-       type: String,
-       hashKey: true,
-     },
-     name: {
-       type: String,
-     },
-     email: {
-       type: String,
-     }
-   };
-   export const UserSchema = new Schema(attributes);
-   ```
+  const attributes: SchemaAttributes = {
+   id: {
+     type: String,
+     hashKey: true,
+   },
+   name: {
+     type: String,
+   },
+   email: {
+     type: String,
+   }
+  };
+  export const UserSchema = new Schema(attributes);
+
+  export interface UserKeys = {
+    id: string;
+  };
+
+  export interface UserAttributes extends UserKeys {
+    name: string;
+    email?: string;
+  };
+  ```
+  
+  `UserKeys` holds the hashKey/partition key and (optionally) the rangeKey/sort key. `UserAttributes` holds all other attributes. When creating this two interfaces and using when injecting your model you will have typechecking when using operations like `Model.update()`.
    
   `new Schema()` optionally accepts options defined by `SchemaOptions`:
 
@@ -147,15 +158,7 @@ $ npm install nestjs-dynamoose dynamoose@beta
     import { InjectModel, Model } from 'nestjs-dynamoose';
     import * as uuid from 'uuid';
 
-    interface UserKeys = {
-      id: string;
-    };
-
-    interface UserAttributes extends UserKeys {
-      name: string;
-      email?: string;
-    };
-
+   
     @Injectable()
     export class UserService {
       constructor(
@@ -179,8 +182,6 @@ $ npm install nestjs-dynamoose dynamoose@beta
       }
     }
    ```
-   
-   `UserKeys` holds the hashKey/partition key, `UserAttributes` holds all other attributes. When creating this two interfaces you will have typechecking when using operations like `Model.update()`.
 
 ## Example
 A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) project has been created to demo the usage of this library, the following are some code gist.
