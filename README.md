@@ -89,11 +89,11 @@ $ npm install nestjs-dynamoose dynamoose@beta
   };
   export const UserSchema = new Schema(attributes);
 
-  export interface UserKeys = {
+  export interface UserSchemaKeys = {
     id: string;
   };
 
-  export interface UserAttributes extends UserKeys {
+  export interface UserSchemaAttributes extends UserKeys {
     name: string;
     email?: string;
   };
@@ -156,6 +156,7 @@ $ npm install nestjs-dynamoose dynamoose@beta
    ```ts
     import { Injectable } from '@nestjs/common';
     import { InjectModel, Model } from 'nestjs-dynamoose';
+    import { UserSchemaKeys, UserSchemaAttributes } from './user/user.schema.ts';
     import * as uuid from 'uuid';
 
    
@@ -163,22 +164,22 @@ $ npm install nestjs-dynamoose dynamoose@beta
     export class UserService {
       constructor(
         @InjectModel('User')
-        private userModel: Model<UserAttributes, UserKeys>,
+        private userModel: Model<UserSchemaAttributes, UserSchemaKeys>,
       ) {}
 
-      create(input: UserAttributes) {
+      create() {
         return this.userModel.create({
-          ...input,
-          id: uuid.v4(),
+          id: '123'
+          name: 'John Doe',
         });
       }
 
-      update(key: UserKeys, input: UserAttributes) {
-        return this.userModel.update(key, input);
+      update(keys: UserKeys, updateObj: any) {
+        return this.userModel.update(keys, updateObj);
       }
 
-      find() {
-        return this.userModel.scan().exec();
+      find(keys: UserKeys) {
+        return this.userModel.query(keys).exec();
       }
     }
    ```
