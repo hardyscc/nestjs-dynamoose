@@ -34,9 +34,6 @@
 $ npm install nestjs-dynamoose dynamoose@beta
 ```
 
-## Example
-A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) project has been created to demo the usage of this library, the following are some code gist.
-
 ## Quick Start
 
 **1. Add import into your app module**
@@ -184,6 +181,9 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
    ```
    
    `UserKeys` holds the hashKey/partition key, `UserAttributes` holds all other attributes. When creating this two interfaces you will have typechecking when using operations like `Model.update()`.
+
+## Example
+A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) project has been created to demo the usage of this library, the following are some code gist.
 
 ## Support
 
