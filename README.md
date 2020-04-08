@@ -39,7 +39,7 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
 
 ## Quick Start
 
-1. Add import into your app module
+**1. Add import into your app module**
 
    `src/app.module.ts`
    ```ts
@@ -71,7 +71,7 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
     
     There is also `forRootAsync(options: DynamooseModuleAsyncOptions)` if you want to use a factory with dependency injection.
   
-2. Create a schema
+**2. Create a schema**
 
    `src/user/user.schema.ts`
    ```ts
@@ -118,7 +118,7 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
     }
     ```
 
-3. Add the models you want to inject to your modules
+**3. Add the models you want to inject to your modules**
 
    This can be a feature module (as shown below) or within the root AppModule next to `DynamooseModule.forRoot()`.
 
@@ -142,7 +142,7 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
    
    There is also `forFeatureAsync(factories?: AsyncModelFactory[])` if you want to use a factory with dependency injection.
 
-4. Inject and use your model
+**4. Inject and use your model**
 
    `src/user/user.service.ts`
    ```ts
