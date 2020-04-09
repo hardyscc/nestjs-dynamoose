@@ -88,18 +88,21 @@ $ npm install nestjs-dynamoose dynamoose@beta --save
    }
   };
   export const UserSchema = new Schema(attributes);
-
-  export interface UserSchemaKey = {
+  ```
+  
+  `src/user/user.interface.ts`
+  ```ts
+  export interface UserKey = {
     id: string;
   };
 
-  export interface UserSchemaAttributes extends UserKey {
+  export interface User extends UserKey {
     name: string;
     email?: string;
   };
   ```
   
-  `UserKey` holds the hashKey/partition key and (optionally) the rangeKey/sort key. `UserAttributes` holds all other attributes. When creating this two interfaces and using when injecting your model you will have typechecking when using operations like `Model.update()`.
+  `UserKey` holds the hashKey/partition key and (optionally) the rangeKey/sort key. `User` holds all attributes of the document/item. When creating this two interfaces and using when injecting your model you will have typechecking when using operations like `Model.update()`.
    
   `new Schema()` optionally accepts options defined by `SchemaOptions`:
 
@@ -156,14 +159,13 @@ $ npm install nestjs-dynamoose dynamoose@beta --save
    ```ts
     import { Injectable } from '@nestjs/common';
     import { InjectModel, Model } from 'nestjs-dynamoose';
-    import { UserSchemaKey, UserSchemaAttributes } from './user/user.schema.ts';
+    import { UserKey, User } from './user/user.interface.ts';
 
-   
     @Injectable()
     export class UserService {
       constructor(
         @InjectModel('User')
-        private userModel: Model<UserSchemaAttributes, UserSchemaKey>,
+        private userModel: Model<User, UserKey>,
       ) {}
 
       create(attributes: UserSchemaAttributes) {
