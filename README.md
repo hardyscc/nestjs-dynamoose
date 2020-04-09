@@ -168,7 +168,7 @@ $ npm install nestjs-dynamoose dynamoose@beta --save
         private userModel: Model<User, UserKey>,
       ) {}
 
-      create(attributes: UserSchemaAttributes) {
+      create(attributes: User) {
         return this.userModel.create(attributes);
       }
 
