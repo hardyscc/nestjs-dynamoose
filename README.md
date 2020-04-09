@@ -31,30 +31,109 @@
 ## Installation
 
 ```bash
-$ npm install nestjs-dynamoose dynamoose@beta
+$ npm install nestjs-dynamoose dynamoose@beta --save
 ```
 
 ## Quick Start
 
-A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) project has been created to demo the usage of this library, the following are some code gist.
+**1. Add import into your app module**
 
-1. App Module: `src/app.module.ts`
+  `src/app.module.ts`
+  ```ts
+  import { DynamooseModule } from 'nestjs-dynamoose';
+  import { UserModule } from './user/user.module';
 
-   ```ts
-   import { DynamooseModule } from 'nestjs-dynamoose';
-   import { UserModule } from './user/user.module';
+  @Module({
+   imports: [
+     DynamooseModule.forRoot(),
+     UserModule,
+   ],
+  })
+  export class AppModule {
+  ```
 
-   @Module({
-     imports: [
-       DynamooseModule.forRoot(),
-       UserModule,
-     ],
-   })
-   export class AppModule {
-   ```
+  `forRoot()` optionally accepts the following options defined by `DynamooseModuleOptions`:
 
-2. User Module: `src/user/user.module.ts`
+  ```ts
+  interface DynamooseModuleOptions {
+    aws?: {
+        accessKeyId?: string;
+        secretAccessKey?: string;
+        region?: string;
+    };
+    local?: boolean | string;
+    model?: ModelOptions;
+  }
+  ```
+    
+  There is also `forRootAsync(options: DynamooseModuleAsyncOptions)` if you want to use a factory with dependency injection.
+  
+**2. Create a schema**
 
+  `src/user/user.schema.ts`
+  ```ts
+  import { Schema } from 'dynamoose';
+  import { SchemaAttributes } from 'nestjs-dynamoose';
+
+  const attributes: SchemaAttributes = {
+   id: {
+     type: String,
+     hashKey: true,
+   },
+   name: {
+     type: String,
+   },
+   email: {
+     type: String,
+   }
+  };
+  export const UserSchema = new Schema(attributes);
+  ```
+  
+  `src/user/user.interface.ts`
+  ```ts
+  export interface UserKey = {
+    id: string;
+  };
+
+  export interface User extends UserKey {
+    name: string;
+    email?: string;
+  };
+  ```
+  
+  `UserKey` holds the hashKey/partition key and (optionally) the rangeKey/sort key. `User` holds all attributes of the document/item. When creating this two interfaces and using when injecting your model you will have typechecking when using operations like `Model.update()`.
+   
+  `new Schema()` optionally accepts options defined by `SchemaOptions`:
+
+  ```ts
+  interface SchemaOptions {
+    throughput?: boolean | {
+        read: number;
+        write: number;
+    } | 'ON_DEMAND';
+    useNativeBooleans?: boolean;
+    useDocumentTypes?: boolean;
+    timestamps?: boolean | {
+        createdAt: string;
+        updatedAt: string;
+    };
+    expires?: number | {
+        ttl: number;
+        attribute: string;
+        returnExpiredItems: boolean;
+    };
+    saveUnknown?: boolean;
+    attributeToDynamo?: (name: string, json: any, model: any, defaultFormatter: any) => any;
+    attributeFromDynamo?: (name: string, json: any, fallback: any) => any;
+  }
+  ```
+    
+**3. Add the models you want to inject to your modules**
+
+   This can be a feature module (as shown below) or within the root AppModule next to `DynamooseModule.forRoot()`.
+
+   `src/user/user.module.ts`
    ```ts
    import { DynamooseModule } from 'nestjs-dynamoose';
    import { UserSchema } from './user.schema';
@@ -71,65 +150,48 @@ A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) pr
    })
    export class UserModule {}
    ```
+   
+   There is also `forFeatureAsync(factories?: AsyncModelFactory[])` if you want to use a factory with dependency injection.
 
-3. User Schema: `src/user/user.schema.ts`
+**4. Inject and use your model**
 
+   `src/user/user.service.ts`
    ```ts
-   import { Schema } from 'dynamoose';
-   import { SchemaAttributes } from 'nestjs-dynamoose';
+    import { Injectable } from '@nestjs/common';
+    import { InjectModel, Model } from 'nestjs-dynamoose';
+    import { UserKey, User } from './user/user.interface.ts';
 
-   const schemaAttributes: SchemaAttributes = {
-     id: {
-       type: String,
-       hashKey: true,
-     },
-     name: {
-       type: String,
-     },
-   };
-   export const UserSchema = new Schema(schemaAttributes);
+    @Injectable()
+    export class UserService {
+      constructor(
+        @InjectModel('User')
+        private userModel: Model<User, UserKey>,
+      ) {}
+
+      create(attributes: User) {
+        return this.userModel.create(attributes);
+      }
+
+      update(key: UserKey, updateObj: any) {
+        return this.userModel.update(key, updateObj);
+      }
+      
+      find(key: UserKey) {
+        return this.userModel.query(key).exec();
+      }
+      
+      findOne(key: UserKey) {
+        return this.userModel.get(key);
+      }
+
+      findAll(key: UserKey) {
+        return this.userModel.scan(key).exec();
+      }
+    }
    ```
 
-4. User Service: `src/user/user.service.ts`
-
-   ```ts
-   import { Injectable } from '@nestjs/common';
-   import { InjectModel, Model } from 'nestjs-dynamoose';
-   import * as uuid from 'uuid';
-
-   type UserKey = {
-     id: string;
-   };
-
-   type UserInput = {
-     name: string;
-   };
-
-   type User = UserKey & UserInput;
-
-   @Injectable()
-   export class UserService {
-     constructor(
-       @InjectModel('User')
-       private userModel: Model<User, UserKey>,
-     ) {}
-
-     create(input: UserInput) {
-       return this.userModel.create({
-         ...input,
-         id: uuid.v4(),
-       });
-     }
-
-     update(key: UserKey, input: UserInput) {
-       return this.userModel.update(key, input);
-     }
-
-     find() {
-       return this.userModel.scan().exec();
-     }
-   }
-   ```
+## Example
+A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) project has been created to demo the usage of this library.
 
 ## Support
 
