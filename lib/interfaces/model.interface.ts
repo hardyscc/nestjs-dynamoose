@@ -170,7 +170,6 @@ export interface QueryInterface<T, R> {
   or(): QueryInterface<T, R>;
   not(): QueryInterface<T, R>;
   null(): QueryInterface<T, R>;
-  exists(): QueryInterface<T, R>;
   eq(value: any): QueryInterface<T, R>;
   lt(value: any): QueryInterface<T, R>;
   le(value: any): QueryInterface<T, R>;
@@ -189,6 +188,8 @@ export interface QueryInterface<T, R> {
   count(): QueryInterface<T, R>;
   counts(): QueryInterface<T, R>;
   using(indexName: string): QueryInterface<T, R>;
+  /* v2 */
+  exists(): QueryInterface<T, R>;
 }
 export interface QueryResult<T> extends Array<T> {
   count: number;
@@ -230,6 +231,8 @@ export interface ScanInterface<T> {
   attributes(value: any): ScanInterface<T>;
   count(): ScanInterface<T>;
   counts(): ScanInterface<T>;
+  /* v2 */
+  exists(): ScanInterface<T>;
 }
 
 export interface ScanResult<ModelData> extends Array<ModelData> {
