@@ -170,6 +170,7 @@ export interface QueryInterface<T, R> {
   or(): QueryInterface<T, R>;
   not(): QueryInterface<T, R>;
   null(): QueryInterface<T, R>;
+  exists(): QueryInterface<T, R>;
   eq(value: any): QueryInterface<T, R>;
   lt(value: any): QueryInterface<T, R>;
   le(value: any): QueryInterface<T, R>;
