@@ -189,7 +189,10 @@ export interface QueryInterface<T, R> {
   using(indexName: string): QueryInterface<T, R>;
 }
 export interface QueryResult<T> extends Array<T> {
+  count: number;
   lastKey?: QueryKey;
+  queriedCount?: number;
+  timesQueried: number;
 }
 type QueryKey = any;
 
@@ -228,7 +231,10 @@ export interface ScanInterface<T> {
 }
 
 export interface ScanResult<ModelData> extends Array<ModelData> {
+  count: number;
   lastKey?: ScanKey;
+  scannedCount?: number;
+  timesScanned: number;
 }
 
 type ScanKey = any;
