@@ -169,6 +169,7 @@ export interface QueryInterface<T, R> {
   and(): QueryInterface<T, R>;
   or(): QueryInterface<T, R>;
   not(): QueryInterface<T, R>;
+  null(): QueryInterface<T, R>;
   eq(value: any): QueryInterface<T, R>;
   lt(value: any): QueryInterface<T, R>;
   le(value: any): QueryInterface<T, R>;
@@ -210,6 +211,7 @@ export interface ScanInterface<T> {
   filter(filter: any): ScanInterface<T>;
   and(): ScanInterface<T>;
   not(): ScanInterface<T>;
+  null(): ScanInterface<T>;
   eq(value: any): ScanInterface<T>;
   lt(value: any): ScanInterface<T>;
   le(value: any): ScanInterface<T>;
