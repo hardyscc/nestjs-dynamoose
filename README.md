@@ -38,159 +38,173 @@ $ npm install nestjs-dynamoose dynamoose@beta --save
 
 **1. Add import into your app module**
 
-  `src/app.module.ts`
-  ```ts
-  import { DynamooseModule } from 'nestjs-dynamoose';
-  import { UserModule } from './user/user.module';
+`src/app.module.ts`
 
-  @Module({
-   imports: [
-     DynamooseModule.forRoot(),
-     UserModule,
-   ],
-  })
-  export class AppModule {
-  ```
+```ts
+import { DynamooseModule } from 'nestjs-dynamoose';
+import { UserModule } from './user/user.module';
 
-  `forRoot()` optionally accepts the following options defined by `DynamooseModuleOptions`:
+@Module({
+ imports: [
+   DynamooseModule.forRoot(),
+   UserModule,
+ ],
+})
+export class AppModule {
+```
 
-  ```ts
-  interface DynamooseModuleOptions {
-    aws?: {
-        accessKeyId?: string;
-        secretAccessKey?: string;
-        region?: string;
-    };
-    local?: boolean | string;
-    model?: ModelOptions;
-  }
-  ```
-    
-  There is also `forRootAsync(options: DynamooseModuleAsyncOptions)` if you want to use a factory with dependency injection.
-  
+`forRoot()` optionally accepts the following options defined by `DynamooseModuleOptions`:
+
+```ts
+interface DynamooseModuleOptions {
+  aws?: {
+    accessKeyId?: string;
+    secretAccessKey?: string;
+    region?: string;
+  };
+  local?: boolean | string;
+  model?: ModelOptions;
+}
+```
+
+There is also `forRootAsync(options: DynamooseModuleAsyncOptions)` if you want to use a factory with dependency injection.
+
 **2. Create a schema**
 
-  `src/user/user.schema.ts`
-  ```ts
-  import { Schema } from 'dynamoose';
-  import { SchemaAttributes } from 'nestjs-dynamoose';
+`src/user/user.schema.ts`
 
-  const attributes: SchemaAttributes = {
-   id: {
-     type: String,
-     hashKey: true,
-   },
-   name: {
-     type: String,
-   },
-   email: {
-     type: String,
-   }
-  };
-  export const UserSchema = new Schema(attributes);
-  ```
-  
-  `src/user/user.interface.ts`
-  ```ts
-  export interface UserKey = {
-    id: string;
-  };
+```ts
+import { Schema } from 'dynamoose';
+import { SchemaAttributes } from 'nestjs-dynamoose';
 
-  export interface User extends UserKey {
-    name: string;
-    email?: string;
-  };
-  ```
-  
-  `UserKey` holds the hashKey/partition key and (optionally) the rangeKey/sort key. `User` holds all attributes of the document/item. When creating this two interfaces and using when injecting your model you will have typechecking when using operations like `Model.update()`.
-   
-  `new Schema()` optionally accepts options defined by `SchemaOptions`:
+const attributes: SchemaAttributes = {
+  id: {
+    type: String,
+    hashKey: true,
+  },
+  name: {
+    type: String,
+  },
+  email: {
+    type: String,
+  },
+};
+export const UserSchema = new Schema(attributes);
+```
 
-  ```ts
-  interface SchemaOptions {
-    throughput?: boolean | {
+`src/user/user.interface.ts`
+
+```ts
+export interface UserKey {
+  id: string;
+}
+
+export interface User extends UserKey {
+  name: string;
+  email?: string;
+}
+```
+
+`UserKey` holds the hashKey/partition key and (optionally) the rangeKey/sort key. `User` holds all attributes of the document/item. When creating this two interfaces and using when injecting your model you will have typechecking when using operations like `Model.update()`.
+
+`new Schema()` optionally accepts options defined by `SchemaOptions`:
+
+```ts
+interface SchemaOptions {
+  throughput?:
+    | boolean
+    | {
         read: number;
         write: number;
-    } | 'ON_DEMAND';
-    useNativeBooleans?: boolean;
-    useDocumentTypes?: boolean;
-    timestamps?: boolean | {
+      }
+    | 'ON_DEMAND';
+  useNativeBooleans?: boolean;
+  useDocumentTypes?: boolean;
+  timestamps?:
+    | boolean
+    | {
         createdAt: string;
         updatedAt: string;
-    };
-    expires?: number | {
+      };
+  expires?:
+    | number
+    | {
         ttl: number;
         attribute: string;
         returnExpiredItems: boolean;
-    };
-    saveUnknown?: boolean;
-    attributeToDynamo?: (name: string, json: any, model: any, defaultFormatter: any) => any;
-    attributeFromDynamo?: (name: string, json: any, fallback: any) => any;
-  }
-  ```
-    
+      };
+  saveUnknown?: boolean;
+  attributeToDynamo?: (
+    name: string,
+    json: any,
+    model: any,
+    defaultFormatter: any,
+  ) => any;
+  attributeFromDynamo?: (name: string, json: any, fallback: any) => any;
+}
+```
+
 **3. Add the models you want to inject to your modules**
 
-   This can be a feature module (as shown below) or within the root AppModule next to `DynamooseModule.forRoot()`.
+This can be a feature module (as shown below) or within the root AppModule next to `DynamooseModule.forRoot()`.
 
-   `src/user/user.module.ts`
-   ```ts
-   import { DynamooseModule } from 'nestjs-dynamoose';
-   import { UserSchema } from './user.schema';
-   import { UserService } from './user.service';
+`src/user/user.module.ts`
 
-   @Module({
-     imports: [
-       DynamooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
-     ],
-     providers: [
-       UserService,
-       ...
-     ],
-   })
-   export class UserModule {}
-   ```
-   
-   There is also `forFeatureAsync(factories?: AsyncModelFactory[])` if you want to use a factory with dependency injection.
+```ts
+import { DynamooseModule } from 'nestjs-dynamoose';
+import { UserSchema } from './user.schema';
+import { UserService } from './user.service';
+
+@Module({
+  imports: [
+    DynamooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
+  ],
+  providers: [
+    UserService,
+    ...
+  ],
+})
+export class UserModule {}
+```
+
+There is also `forFeatureAsync(factories?: AsyncModelFactory[])` if you want to use a factory with dependency injection.
 
 **4. Inject and use your model**
 
-   `src/user/user.service.ts`
-   ```ts
-    import { Injectable } from '@nestjs/common';
-    import { InjectModel, Model } from 'nestjs-dynamoose';
-    import { UserKey, User } from './user/user.interface.ts';
+`src/user/user.service.ts`
 
-    @Injectable()
-    export class UserService {
-      constructor(
-        @InjectModel('User')
-        private userModel: Model<User, UserKey>,
-      ) {}
+```ts
+import { Injectable } from '@nestjs/common';
+import { InjectModel, Model } from 'nestjs-dynamoose';
+import { User, UserKey } from './user.interface';
 
-      create(attributes: User) {
-        return this.userModel.create(attributes);
-      }
+@Injectable()
+export class UserService {
+  constructor(
+    @InjectModel('User')
+    private userModel: Model<User, UserKey>,
+  ) {}
 
-      update(key: UserKey, updateObj: any) {
-        return this.userModel.update(key, updateObj);
-      }
-      
-      find(key: UserKey) {
-        return this.userModel.query(key).exec();
-      }
-      
-      findOne(key: UserKey) {
-        return this.userModel.get(key);
-      }
+  create(user: User) {
+    return this.userModel.create(user);
+  }
 
-      findAll(key: UserKey) {
-        return this.userModel.scan(key).exec();
-      }
-    }
-   ```
+  update(key: UserKey, user: Partial<User>) {
+    return this.userModel.update(key, user);
+  }
 
-## Example
+  findOne(key: UserKey) {
+    return this.userModel.get(key);
+  }
+
+  findAll() {
+    return this.userModel.scan().exec();
+  }
+}
+```
+
+## Example Project
+
 A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) project has been created to demo the usage of this library.
 
 ## Support
