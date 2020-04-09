@@ -163,12 +163,12 @@ export interface UpdateOptions {
 type QueryFilter = any;
 export interface QueryInterface<T, R> {
   exec(callback?: (err: Error, result: R) => void): Promise<R>;
+  all(delay?: number, max?: number): QueryInterface<T, R>;
   where(rangeKey: string): QueryInterface<T, R>;
   filter(filter: string): QueryInterface<T, R>;
   and(): QueryInterface<T, R>;
   or(): QueryInterface<T, R>;
   not(): QueryInterface<T, R>;
-  all(): QueryInterface<T, R>;
   eq(value: any): QueryInterface<T, R>;
   lt(value: any): QueryInterface<T, R>;
   le(value: any): QueryInterface<T, R>;
@@ -210,7 +210,6 @@ export interface ScanInterface<T> {
   filter(filter: any): ScanInterface<T>;
   and(): ScanInterface<T>;
   not(): ScanInterface<T>;
-  all(): ScanInterface<T>;
   eq(value: any): ScanInterface<T>;
   lt(value: any): ScanInterface<T>;
   le(value: any): ScanInterface<T>;
