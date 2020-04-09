@@ -173,9 +173,17 @@ $ npm install nestjs-dynamoose dynamoose@beta --save
       update(key: UserKey, updateObj: any) {
         return this.userModel.update(key, updateObj);
       }
-
-      findOne(key: UserKey) {
+      
+      find(key: UserKey) {
         return this.userModel.query(key).exec();
+      }
+      
+      findOne(key: UserKey) {
+        return this.userModel.get(key);
+      }
+
+      findAll(key: UserKey) {
+        return this.userModel.scan(key).exec();
       }
     }
    ```
