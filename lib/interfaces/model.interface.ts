@@ -163,6 +163,7 @@ export interface UpdateOptions {
 type QueryFilter = any;
 export interface QueryInterface<T, R> {
   exec(callback?: (err: Error, result: R) => void): Promise<R>;
+  all(delay?: number, max?: number): QueryInterface<T, R>;
   where(rangeKey: string): QueryInterface<T, R>;
   filter(filter: string): QueryInterface<T, R>;
   and(): QueryInterface<T, R>;
