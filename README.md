@@ -181,7 +181,7 @@ $ npm install nestjs-dynamoose dynamoose@beta --save
    ```
 
 ## Example
-A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) project has been created to demo the usage of this library, the following are some code gist.
+A [Serverless NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) project has been created to demo the usage of this library.
 
 ## Support
 
