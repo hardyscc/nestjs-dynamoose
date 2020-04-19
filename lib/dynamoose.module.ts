@@ -38,7 +38,7 @@ export class DynamooseModule {
 
   static forFeatureAsync(factories: AsyncModelFactory[] = []): DynamicModule {
     const providers = createDynamooseAsyncProviders(factories);
-    const imports = factories.map(factory => factory.imports || []);
+    const imports = factories.map((factory) => factory.imports || []);
     const uniqImports = new Set(flatten(imports));
     return {
       module: DynamooseModule,
