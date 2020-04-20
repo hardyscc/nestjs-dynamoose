@@ -23,7 +23,7 @@ function initialization(options: DynamooseModuleOptions) {
     }
   }
   if (options.model) {
-    dynamoose.model.defaults = options.model;
+    dynamoose.model.defaults.set(options.model);
   }
 }
 
