@@ -42,7 +42,7 @@
   "peerDependencies": {
     "@nestjs/common": "^6.0.0 || ^7.0.0",
     "@nestjs/core": "^6.0.0 || ^7.0.0",
-    "dynamoose": "^2.0.0-beta.11",
+    "dynamoose": "^2.0.0",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.0.0"
   },
