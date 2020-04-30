@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { DynamicModule, Global, Module, Provider, Type } from '@nestjs/common';
-import * as dynamoose from 'dynamoose';
+import { aws, model } from 'dynamoose';
 import {
   DYNAMOOSE_INITIALIZATION,
   DYNAMOOSE_MODULE_OPTIONS,
@@ -13,17 +13,17 @@ import {
 
 function initialization(options: DynamooseModuleOptions) {
   if (options.aws) {
-    dynamoose.aws.sdk.config.update(options.aws);
+    aws.sdk.config.update(options.aws);
   }
   if (options.local) {
     if (typeof options.local !== 'string') {
-      dynamoose.aws.ddb.local();
+      aws.ddb.local();
     } else {
-      dynamoose.aws.ddb.local(options.local);
+      aws.ddb.local(options.local);
     }
   }
   if (options.model) {
-    dynamoose.model.defaults.set(options.model);
+    model.defaults.set(options.model);
   }
 }
 

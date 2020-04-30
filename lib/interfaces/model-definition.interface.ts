@@ -1,7 +1,8 @@
-import { ModelOptions } from './model-options.interface';
+import { ModelOptionsOptional } from 'dynamoose/dist/Model';
+import { Schema } from 'dynamoose/dist/Schema';
 
 export type ModelDefinition = {
   name: string;
-  schema: any;
-  options?: ModelOptions;
+  schema: Schema;
+  options?: ModelOptionsOptional;
 };

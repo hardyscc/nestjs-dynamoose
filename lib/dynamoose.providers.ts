@@ -1,14 +1,14 @@
 import { flatten } from '@nestjs/common';
-import * as dynamoose from 'dynamoose';
+import { model } from 'dynamoose';
 import { getModelToken } from './common/dynamoose.utils';
 import { DYNAMOOSE_INITIALIZATION } from './dynamoose.constants';
 import { ModelDefinition } from './interfaces';
 import { AsyncModelFactory } from './interfaces/async-model-factory.interface';
 
 export function createDynamooseProviders(models: ModelDefinition[] = []) {
-  const providers = (models || []).map((model) => ({
-    provide: getModelToken(model.name),
-    useFactory: () => dynamoose.model(model.name, model.schema, model.options),
+  const providers = (models || []).map((m) => ({
+    provide: getModelToken(m.name),
+    useFactory: () => model(m.name, m.schema, m.options) as any,
     inject: [DYNAMOOSE_INITIALIZATION],
   }));
   return providers;
@@ -17,14 +17,14 @@ export function createDynamooseProviders(models: ModelDefinition[] = []) {
 export function createDynamooseAsyncProviders(
   modelFactories: AsyncModelFactory[] = [],
 ) {
-  const providers = (modelFactories || []).map((model) => [
+  const providers = (modelFactories || []).map((m) => [
     {
-      provide: getModelToken(model.name),
+      provide: getModelToken(m.name),
       useFactory: async (...args: unknown[]) => {
-        const schema = await model.useFactory(...args);
-        return dynamoose.model(model.name, schema, model.options);
+        const schema = await m.useFactory(...args);
+        return model(m.name, schema, m.options) as any;
       },
-      inject: [DYNAMOOSE_INITIALIZATION, ...(model.inject || [])],
+      inject: [DYNAMOOSE_INITIALIZATION, ...(m.inject || [])],
     },
   ]);
   return flatten(providers);

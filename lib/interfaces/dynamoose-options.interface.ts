@@ -1,5 +1,5 @@
 import { ModuleMetadata, Type } from '@nestjs/common/interfaces';
-import { ModelOptions } from './model-options.interface';
+import { ModelOptionsOptional } from 'dynamoose/dist/Model';
 
 export interface DynamooseModuleOptions {
   aws?: {
@@ -8,7 +8,7 @@ export interface DynamooseModuleOptions {
     region?: string;
   };
   local?: boolean | string;
-  model?: ModelOptions;
+  model?: ModelOptionsOptional;
 }
 
 export interface DynamooseOptionsFactory {

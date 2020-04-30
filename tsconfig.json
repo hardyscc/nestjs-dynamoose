@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+    "esModuleInterop": true,
     "declaration": true,
     "noImplicitAny": false,
     "removeComments": true,
@@ -13,11 +14,6 @@
     "rootDir": "./lib",
     "strict": true
   },
-  "include": [
-    "lib/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
-  ]
+  "include": ["lib/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }
