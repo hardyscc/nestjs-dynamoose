@@ -25,7 +25,7 @@
     "@types/node": "13.13.4",
     "@typescript-eslint/eslint-plugin": "2.31.0",
     "@typescript-eslint/parser": "2.31.0",
-    "dynamoose": "github:dynamoose/dynamoose",
+    "dynamoose": "2.1.2",
     "eslint": "6.8.0",
     "eslint-config-prettier": "6.11.0",
     "eslint-plugin-import": "2.20.2",
@@ -42,7 +42,7 @@
   "peerDependencies": {
     "@nestjs/common": "^6.0.0 || ^7.0.0",
     "@nestjs/core": "^6.0.0 || ^7.0.0",
-    "dynamoose": "^2.1.0",
+    "dynamoose": "^2.1.1",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.0.0"
   },
