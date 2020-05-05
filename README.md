@@ -3,6 +3,7 @@
 </p>
 
 <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+
 <p align="center">
 <a href="https://www.npmjs.com/package/nestjs-dynamoose"><img src="https://img.shields.io/npm/v/nestjs-dynamoose" alt="NPM Version"></a>
 <a href="https://github.com/hardyscc/nestjs-dynamoose/blob/master/LICENSE"><img src="https://img.shields.io/github/license/hardyscc/nestjs-dynamoose" alt="Package License"></a>
@@ -157,4 +158,4 @@ export class UserService {
 
 ## License
 
-Dynamoose Module for Nest is [MIT licensed](LICENSE).
+Dynamoose module for Nest is [MIT licensed](LICENSE).
