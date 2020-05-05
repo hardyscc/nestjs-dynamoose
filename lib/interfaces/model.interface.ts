@@ -14,11 +14,13 @@ export interface DocumentRetrieverResponse<Data, Key> extends Array<Data> {
   lastKey?: Key;
   count: number;
 }
+
 export interface ScanResponse<Data, Key>
   extends DocumentRetrieverResponse<Data, Key> {
   scannedCount: number;
   timesScanned: number;
 }
+
 export interface QueryResponse<Data, Key>
   extends DocumentRetrieverResponse<Data, Key> {
   queriedCount: number;
@@ -46,11 +48,11 @@ export type UpdatePartial<T> =
 
 export interface Model<Data, Key> {
   query(condition?: ConditionInitalizer): QueryInterface<Data, Key>;
+
   scan(condition?: ConditionInitalizer): ScanInterface<Data, Key>;
 
   update(obj: Data): Promise<Data>;
   update(obj: Data, callback: CallbackType<Data, AWSError>): void;
-
   update(keyObj: Key, updateObj: UpdatePartial<Data>): Promise<Data>;
   update(
     keyObj: Key,
