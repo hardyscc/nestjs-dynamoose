@@ -75,9 +75,8 @@ There is also `forRootAsync(options: DynamooseModuleAsyncOptions)` if you want t
 
 ```ts
 import { Schema } from 'dynamoose';
-import { SchemaAttributes } from 'nestjs-dynamoose';
 
-const attributes: SchemaAttributes = {
+export const UserSchema = new Schema({
   id: {
     type: String,
     hashKey: true,
@@ -88,8 +87,7 @@ const attributes: SchemaAttributes = {
   email: {
     type: String,
   },
-};
-export const UserSchema = new Schema(attributes);
+});
 ```
 
 `src/user/user.interface.ts`
@@ -106,43 +104,6 @@ export interface User extends UserKey {
 ```
 
 `UserKey` holds the hashKey/partition key and (optionally) the rangeKey/sort key. `User` holds all attributes of the document/item. When creating this two interfaces and using when injecting your model you will have typechecking when using operations like `Model.update()`.
-
-`new Schema()` optionally accepts options defined by `SchemaOptions`:
-
-```ts
-interface SchemaOptions {
-  throughput?:
-    | boolean
-    | {
-        read: number;
-        write: number;
-      }
-    | 'ON_DEMAND';
-  useNativeBooleans?: boolean;
-  useDocumentTypes?: boolean;
-  timestamps?:
-    | boolean
-    | {
-        createdAt: string;
-        updatedAt: string;
-      };
-  expires?:
-    | number
-    | {
-        ttl: number;
-        attribute: string;
-        returnExpiredItems: boolean;
-      };
-  saveUnknown?: boolean;
-  attributeToDynamo?: (
-    name: string,
-    json: any,
-    model: any,
-    defaultFormatter: any,
-  ) => any;
-  attributeFromDynamo?: (name: string, json: any, fallback: any) => any;
-}
-```
 
 **3. Add the models you want to inject to your modules**
 
