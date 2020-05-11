@@ -5,24 +5,26 @@ import {
   ConditionInitalizer,
 } from 'dynamoose/dist/Condition';
 
+export declare type ObjectType = {
+  [key: string]: any;
+};
+
 export declare type CallbackType<R, E> = (
   error?: E | null,
   response?: R,
 ) => void;
 
-export interface DocumentRetrieverResponse<Data, Key> extends Array<Data> {
-  lastKey?: Key;
+export interface DocumentRetrieverResponse<T> extends Array<T> {
+  lastKey?: ObjectType;
   count: number;
 }
 
-export interface ScanResponse<Data, Key>
-  extends DocumentRetrieverResponse<Data, Key> {
+export interface ScanResponse<T> extends DocumentRetrieverResponse<T> {
   scannedCount: number;
   timesScanned: number;
 }
 
-export interface QueryResponse<Data, Key>
-  extends DocumentRetrieverResponse<Data, Key> {
+export interface QueryResponse<T> extends DocumentRetrieverResponse<T> {
   queriedCount: number;
   timesQueried: number;
 }
@@ -47,9 +49,9 @@ export type UpdatePartial<T> =
   | { $REMOVE: Partial<T> };
 
 export interface Model<Data, Key> {
-  query(condition?: ConditionInitalizer): QueryInterface<Data, Key>;
+  query(condition?: ConditionInitalizer): Query<Data, Key>;
 
-  scan(condition?: ConditionInitalizer): ScanInterface<Data, Key>;
+  scan(condition?: ConditionInitalizer): Scan<Data, Key>;
 
   update(obj: Data): Promise<Data>;
   update(obj: Data, callback: CallbackType<Data, AWSError>): void;
@@ -96,69 +98,43 @@ export interface Model<Data, Key> {
   ): void;
 }
 
-export interface QueryInterface<Data, Key> {
-  exec(): Promise<QueryResponse<Data, Key>>;
-  exec(callback: CallbackType<QueryResponse<Data, Key>, AWSError>): void;
-
+export interface BasicOperators<T> {
   getRequest(): Promise<any>;
-  all(delay?: number, max?: number): QueryInterface<Data, Key>;
-  limit(value: number): QueryInterface<Data, Key>;
-  startAt(value: Key): QueryInterface<Data, Key>;
-  attributes(value: string[]): QueryInterface<Data, Key>;
-  count(): QueryInterface<Data, Key>;
-  consistent(): QueryInterface<Data, Key>;
-  using(value: string): QueryInterface<Data, Key>;
-  and(): QueryInterface<Data, Key>;
-  or(): QueryInterface<Data, Key>;
-  not(): QueryInterface<Data, Key>;
-  parenthesis(value: Condition | ConditionFunction): QueryInterface<Data, Key>;
-  group(value: Condition | ConditionFunction): QueryInterface<Data, Key>;
-  where(key: string): QueryInterface<Data, Key>;
-  filter(key: string): QueryInterface<Data, Key>;
-  attribute(key: string): QueryInterface<Data, Key>;
-  eq(value: any): QueryInterface<Data, Key>;
-  lt(value: any): QueryInterface<Data, Key>;
-  le(value: any): QueryInterface<Data, Key>;
-  gt(value: any): QueryInterface<Data, Key>;
-  ge(value: any): QueryInterface<Data, Key>;
-  beginsWith(value: any): QueryInterface<Data, Key>;
-  contains(value: any): QueryInterface<Data, Key>;
-  exists(value: any): QueryInterface<Data, Key>;
-  in(value: any): QueryInterface<Data, Key>;
-  between(...values: any[]): QueryInterface<Data, Key>;
-  sort(order: SortOrder): QueryInterface<Data, Key>;
+  all(delay?: number, max?: number): T;
+  limit(value: number): T;
+  startAt(value: ObjectType): T;
+  attributes(value: string[]): T;
+  count(): T;
+  consistent(): T;
+  using(value: string): T;
+  and(): T;
+  or(): T;
+  not(): T;
+  parenthesis(value: Condition | ConditionFunction): T;
+  group(value: Condition | ConditionFunction): T;
+  where(key: string): T;
+  filter(key: string): T;
+  attribute(key: string): T;
+  eq(value: any): T;
+  lt(value: any): T;
+  le(value: any): T;
+  gt(value: any): T;
+  ge(value: any): T;
+  beginsWith(value: any): T;
+  contains(value: any): T;
+  exists(value: any): T;
+  in(value: any): T;
+  between(...values: any[]): T;
+  sort(order: SortOrder): T;
 }
 
-export interface ScanInterface<Data, Key> {
-  exec(): Promise<ScanResponse<Data, Key>>;
-  exec(callback: CallbackType<ScanResponse<Data, Key>, AWSError>): void;
-  parallel(value: number): ScanInterface<Data, Key>;
+export interface Query<Data, Key> extends BasicOperators<Query<Data, Key>> {
+  exec(): Promise<QueryResponse<Data>>;
+  exec(callback: CallbackType<QueryResponse<Data>, AWSError>): void;
+}
 
-  getRequest(): Promise<any>;
-  all(delay?: number, max?: number): ScanInterface<Data, Key>;
-  limit(value: number): ScanInterface<Data, Key>;
-  startAt(value: Key): ScanInterface<Data, Key>;
-  attributes(value: string[]): ScanInterface<Data, Key>;
-  count(): ScanInterface<Data, Key>;
-  consistent(): ScanInterface<Data, Key>;
-  using(value: string): ScanInterface<Data, Key>;
-  and(): ScanInterface<Data, Key>;
-  or(): ScanInterface<Data, Key>;
-  not(): ScanInterface<Data, Key>;
-  parenthesis(value: Condition | ConditionFunction): ScanInterface<Data, Key>;
-  group(value: Condition | ConditionFunction): ScanInterface<Data, Key>;
-  where(key: string): ScanInterface<Data, Key>;
-  filter(key: string): ScanInterface<Data, Key>;
-  attribute(key: string): ScanInterface<Data, Key>;
-  eq(value: any): ScanInterface<Data, Key>;
-  lt(value: any): ScanInterface<Data, Key>;
-  le(value: any): ScanInterface<Data, Key>;
-  gt(value: any): ScanInterface<Data, Key>;
-  ge(value: any): ScanInterface<Data, Key>;
-  beginsWith(value: any): ScanInterface<Data, Key>;
-  contains(value: any): ScanInterface<Data, Key>;
-  exists(value: any): ScanInterface<Data, Key>;
-  in(value: any): ScanInterface<Data, Key>;
-  between(...values: any[]): ScanInterface<Data, Key>;
-  sort(order: SortOrder): ScanInterface<Data, Key>;
+export interface Scan<Data, Key> extends BasicOperators<Scan<Data, Key>> {
+  exec(): Promise<ScanResponse<Data>>;
+  exec(callback: CallbackType<ScanResponse<Data>, AWSError>): void;
+  parallel(value: number): Scan<Data, Key>;
 }
