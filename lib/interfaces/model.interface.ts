@@ -143,9 +143,7 @@ export interface Model<Data, Key> {
     settings: ModelBatchDeleteSettings & {
       return: 'response';
     },
-  ): Promise<{
-    unprocessedItems: ObjectType[];
-  }>;
+  ): Promise<UnprocessedItems<Key>>;
   batchDelete(
     keys: Key[],
     settings: ModelBatchDeleteSettings & {
