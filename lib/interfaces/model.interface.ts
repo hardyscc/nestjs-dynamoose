@@ -4,6 +4,7 @@ import {
   ConditionFunction,
   ConditionInitalizer,
 } from 'dynamoose/dist/Condition';
+import { SortOrder } from 'dynamoose/dist/General';
 
 export declare type ObjectType = {
   [key: string]: any;
@@ -31,11 +32,6 @@ export interface QueryResponse<T> extends DocumentRetrieverResponse<T> {
 
 export interface UnprocessedItems<T> {
   unprocessedItems: T[];
-}
-
-export declare enum SortOrder {
-  ascending = 'ascending',
-  descending = 'descending',
 }
 
 export interface ModelGetSettings {
