@@ -36,6 +36,7 @@ export interface UnprocessedItems<T> {
 
 export interface ModelGetSettings {
   return: 'document' | 'request';
+  attributes?: string[];
 }
 export interface ModelDeleteSettings {
   return: null | 'request';
@@ -53,6 +54,7 @@ export interface ModelBatchGetSettings {
 export interface ModelBatchDeleteSettings {
   return: 'response' | 'request';
 }
+
 export interface DocumentSaveSettings {
   overwrite?: boolean;
   return?: 'request' | 'document';
