@@ -15,6 +15,11 @@ export declare type CallbackType<R, E> = (
   response?: R,
 ) => void;
 
+export interface DocumentArray<T> extends Array<T> {
+  populate: () => Promise<DocumentArray<T>>;
+  toJSON: () => ObjectType;
+}
+
 export interface DocumentRetrieverResponse<T> extends Array<T> {
   lastKey?: ObjectType;
   count: number;
@@ -48,6 +53,9 @@ export interface ModelUpdateSettings {
   return: 'document' | 'request';
   condition?: Condition;
 }
+export interface ModelBatchGetDocumentsResponse<T> extends DocumentArray<T> {
+  unprocessedKeys: ObjectType[];
+}
 export interface ModelBatchGetSettings {
   return: 'documents' | 'request';
 }
@@ -65,25 +73,28 @@ export type UpdatePartial<T> =
   | { $ADD: Partial<T> }
   | { $REMOVE: Partial<T> };
 
-export interface Model<Data, Key> {
+export interface Model<Data, Key, DefaultFields extends keyof any = keyof any> {
   query(condition?: ConditionInitalizer): Query<Data, Key>;
 
   scan(condition?: ConditionInitalizer): Scan<Data, Key>;
 
-  batchGet(keys: Key[]): Promise<Data[]>;
-  batchGet(keys: Key[], callback: CallbackType<Data[], AWSError>): void;
+  batchGet(keys: Key[]): Promise<ModelBatchGetDocumentsResponse<Data>>;
+  batchGet(
+    keys: Key[],
+    callback: CallbackType<ModelBatchGetDocumentsResponse<Data>, AWSError>,
+  ): void;
   batchGet(
     keys: Key[],
     settings: ModelBatchGetSettings & {
       return: 'documents';
     },
-  ): Promise<Data[]>;
+  ): Promise<ModelBatchGetDocumentsResponse<Data>>;
   batchGet(
     keys: Key[],
     settings: ModelBatchGetSettings & {
       return: 'documents';
     },
-    callback: CallbackType<Data[], AWSError>,
+    callback: CallbackType<ModelBatchGetDocumentsResponse<Data>, AWSError>,
   ): void;
   batchGet(
     keys: Key[],
@@ -99,32 +110,34 @@ export interface Model<Data, Key> {
     callback: CallbackType<DynamoDB.BatchGetItemInput, AWSError>,
   ): void;
 
-  batchPut(documents: Data[]): Promise<UnprocessedItems<Data>>;
   batchPut(
-    documents: Data[],
+    documents: Omit<Data, DefaultFields>[],
+  ): Promise<UnprocessedItems<Data>>;
+  batchPut(
+    documents: Omit<Data, DefaultFields>[],
     callback: CallbackType<UnprocessedItems<Data>, AWSError>,
   ): void;
   batchPut(
-    documents: Data[],
+    documents: Omit<Data, DefaultFields>[],
     settings: ModelBatchPutSettings & {
       return: 'request';
     },
   ): Promise<DynamoDB.BatchWriteItemInput>;
   batchPut(
-    documents: Data[],
+    documents: Omit<Data, DefaultFields>[],
     settings: ModelBatchPutSettings & {
       return: 'request';
     },
     callback: CallbackType<DynamoDB.BatchWriteItemInput, AWSError>,
   ): void;
   batchPut(
-    documents: Data[],
+    documents: Omit<Data, DefaultFields>[],
     settings: ModelBatchPutSettings & {
       return: 'response';
     },
   ): Promise<UnprocessedItems<Data>>;
   batchPut(
-    documents: Data[],
+    documents: Omit<Data, DefaultFields>[],
     settings: ModelBatchPutSettings & {
       return: 'response';
     },
@@ -202,29 +215,32 @@ export interface Model<Data, Key> {
     callback: CallbackType<DynamoDB.UpdateItemInput, AWSError>,
   ): void;
 
-  create(document: Data): Promise<Data>;
-  create(document: Data, callback: CallbackType<Data, AWSError>): void;
+  create(document: Omit<Data, DefaultFields>): Promise<Data>;
   create(
-    document: Data,
+    document: Omit<Data, DefaultFields>,
+    callback: CallbackType<Data, AWSError>,
+  ): void;
+  create(
+    document: Omit<Data, DefaultFields>,
     settings: DocumentSaveSettings & {
       return: 'request';
     },
   ): Promise<DynamoDB.PutItemInput>;
   create(
-    document: Data,
+    document: Omit<Data, DefaultFields>,
     settings: DocumentSaveSettings & {
       return: 'request';
     },
     callback: CallbackType<DynamoDB.PutItemInput, AWSError>,
   ): void;
   create(
-    document: Data,
+    document: Omit<Data, DefaultFields>,
     settings: DocumentSaveSettings & {
       return: 'document';
     },
   ): Promise<Data>;
   create(
-    document: Data,
+    document: Omit<Data, DefaultFields>,
     settings: DocumentSaveSettings & {
       return: 'document';
     },
