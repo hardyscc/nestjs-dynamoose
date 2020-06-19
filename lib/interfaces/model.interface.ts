@@ -6,6 +6,9 @@ import {
 } from 'dynamoose/dist/Condition';
 import { SortOrder } from 'dynamoose/dist/General';
 
+type OptionalOmit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>> &
+  Partial<Pick<T, Extract<keyof T, K>>>;
+
 export declare type ObjectType = {
   [key: string]: any;
 };
@@ -73,7 +76,7 @@ export type UpdatePartial<T> =
   | { $ADD: Partial<T> }
   | { $REMOVE: Partial<T> };
 
-export interface Model<Data, Key, DefaultFields extends keyof any = keyof any> {
+export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
   query(condition?: ConditionInitalizer): Query<Data, Key>;
 
   scan(condition?: ConditionInitalizer): Scan<Data, Key>;
@@ -111,33 +114,33 @@ export interface Model<Data, Key, DefaultFields extends keyof any = keyof any> {
   ): void;
 
   batchPut(
-    documents: Omit<Data, DefaultFields>[],
+    documents: OptionalOmit<Data, DefaultFields>[],
   ): Promise<UnprocessedItems<Data>>;
   batchPut(
-    documents: Omit<Data, DefaultFields>[],
+    documents: OptionalOmit<Data, DefaultFields>[],
     callback: CallbackType<UnprocessedItems<Data>, AWSError>,
   ): void;
   batchPut(
-    documents: Omit<Data, DefaultFields>[],
+    documents: OptionalOmit<Data, DefaultFields>[],
     settings: ModelBatchPutSettings & {
       return: 'request';
     },
   ): Promise<DynamoDB.BatchWriteItemInput>;
   batchPut(
-    documents: Omit<Data, DefaultFields>[],
+    documents: OptionalOmit<Data, DefaultFields>[],
     settings: ModelBatchPutSettings & {
       return: 'request';
     },
     callback: CallbackType<DynamoDB.BatchWriteItemInput, AWSError>,
   ): void;
   batchPut(
-    documents: Omit<Data, DefaultFields>[],
+    documents: OptionalOmit<Data, DefaultFields>[],
     settings: ModelBatchPutSettings & {
       return: 'response';
     },
   ): Promise<UnprocessedItems<Data>>;
   batchPut(
-    documents: Omit<Data, DefaultFields>[],
+    documents: OptionalOmit<Data, DefaultFields>[],
     settings: ModelBatchPutSettings & {
       return: 'response';
     },
@@ -215,32 +218,32 @@ export interface Model<Data, Key, DefaultFields extends keyof any = keyof any> {
     callback: CallbackType<DynamoDB.UpdateItemInput, AWSError>,
   ): void;
 
-  create(document: Omit<Data, DefaultFields>): Promise<Data>;
+  create(document: OptionalOmit<Data, DefaultFields>): Promise<Data>;
   create(
-    document: Omit<Data, DefaultFields>,
+    document: OptionalOmit<Data, DefaultFields>,
     callback: CallbackType<Data, AWSError>,
   ): void;
   create(
-    document: Omit<Data, DefaultFields>,
+    document: OptionalOmit<Data, DefaultFields>,
     settings: DocumentSaveSettings & {
       return: 'request';
     },
   ): Promise<DynamoDB.PutItemInput>;
   create(
-    document: Omit<Data, DefaultFields>,
+    document: OptionalOmit<Data, DefaultFields>,
     settings: DocumentSaveSettings & {
       return: 'request';
     },
     callback: CallbackType<DynamoDB.PutItemInput, AWSError>,
   ): void;
   create(
-    document: Omit<Data, DefaultFields>,
+    document: OptionalOmit<Data, DefaultFields>,
     settings: DocumentSaveSettings & {
       return: 'document';
     },
   ): Promise<Data>;
   create(
-    document: Omit<Data, DefaultFields>,
+    document: OptionalOmit<Data, DefaultFields>,
     settings: DocumentSaveSettings & {
       return: 'document';
     },
