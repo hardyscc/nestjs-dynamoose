@@ -1,8 +1,8 @@
 import { ModelOptionsOptional } from 'dynamoose/dist/Model';
-import { Schema } from 'dynamoose/dist/Schema';
+import { Schema, SchemaDefinition } from 'dynamoose/dist/Schema';
 
 export type ModelDefinition = {
   name: string;
-  schema: Schema;
+  schema: Schema | SchemaDefinition | (Schema | SchemaDefinition)[];
   options?: ModelOptionsOptional;
 };
