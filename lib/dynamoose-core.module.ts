@@ -1,10 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { DynamicModule, Global, Module, Provider, Type } from '@nestjs/common';
-import { aws, model } from 'dynamoose';
+import {
+  DynamicModule,
+  Global,
+  Logger,
+  LoggerService,
+  Module,
+  Provider,
+  Type,
+} from '@nestjs/common';
+import { aws, logger, model } from 'dynamoose';
+import { LoggerProvider } from './dynamoose-logger.provider';
 import {
   DYNAMOOSE_INITIALIZATION,
   DYNAMOOSE_MODULE_OPTIONS,
 } from './dynamoose.constants';
+import { DynamooseModule } from './dynamoose.module';
 import {
   DynamooseModuleAsyncOptions,
   DynamooseModuleOptions,
@@ -16,7 +26,7 @@ function initialization(options: DynamooseModuleOptions) {
     aws.sdk.config.update(options.aws);
   }
   if (options.local) {
-    if (typeof options.local !== 'string') {
+    if (typeof options.local === 'boolean') {
       aws.ddb.local();
     } else {
       aws.ddb.local(options.local);
@@ -24,6 +34,15 @@ function initialization(options: DynamooseModuleOptions) {
   }
   if (options.model) {
     model.defaults.set(options.model);
+  }
+  if (options.logger) {
+    let loggerService: LoggerService;
+    if (typeof options.logger === 'boolean') {
+      loggerService = new Logger(DynamooseModule.name);
+    } else {
+      loggerService = options.logger;
+    }
+    logger.providers.add(new LoggerProvider(loggerService));
   }
 }
 
