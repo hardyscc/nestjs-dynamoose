@@ -1,3 +1,4 @@
+import { LoggerService } from '@nestjs/common';
 import { ModuleMetadata, Type } from '@nestjs/common/interfaces';
 import { ModelOptionsOptional } from 'dynamoose/dist/Model';
 
@@ -9,6 +10,7 @@ export interface DynamooseModuleOptions {
   };
   local?: boolean | string;
   model?: ModelOptionsOptional;
+  logger?: boolean | LoggerService;
 }
 
 export interface DynamooseOptionsFactory {
