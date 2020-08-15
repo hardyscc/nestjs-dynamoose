@@ -157,6 +157,36 @@ export class UserService {
 }
 ```
 
+## Additional Example
+
+**1. Transaction Support**
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { InjectModel, Model, TransactionSupport } from 'nestjs-dynamoose';
+import { User, UserKey } from './user.interface';
+import { Account, AccountKey } from './account.interface';
+
+@Injectable()
+export class UserService extends TransactionSupport {
+  constructor(
+    @InjectModel('User')
+    private userModel: Model<User, UserKey>,
+    @InjectModel('Account')
+    private accountModel: Model<Account, AccountKey>,
+  ) {
+    super();
+  }
+
+  async create(user: User, account: Account) {
+    await this.transaction([
+      this.userModel.transaction.create(user),
+      this.accountModel.transaction.create(account),
+    ]);
+  }
+}
+```
+
 ## License
 
 Dynamoose module for Nest is [MIT licensed](LICENSE).
