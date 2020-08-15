@@ -307,6 +307,8 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     },
     callback: CallbackType<DynamoDB.GetItemInput, AWSError>,
   ): void;
+
+  transaction: TransactionType<Data, Key>;
 }
 
 export interface BasicOperators<T> {
@@ -349,3 +351,88 @@ export interface Scan<Data, Key> extends BasicOperators<Scan<Data, Key>> {
   exec(callback: CallbackType<ScanResponse<Data>, AWSError>): void;
   parallel(value: number): Scan<Data, Key>;
 }
+
+// Transaction
+export type GetTransactionInput = { Get: DynamoDB.GetItemInput };
+export type CreateTransactionInput = { Put: DynamoDB.PutItemInput };
+export type DeleteTransactionInput = { Delete: DynamoDB.DeleteItemInput };
+export type UpdateTransactionInput = { Update: DynamoDB.UpdateItemInput };
+export type ConditionTransactionInput = {
+  ConditionCheck: DynamoDB.ConditionCheck;
+};
+
+export type GetTransactionResult = Promise<GetTransactionInput>;
+export type CreateTransactionResult = Promise<CreateTransactionInput>;
+export type DeleteTransactionResult = Promise<DeleteTransactionInput>;
+export type UpdateTransactionResult = Promise<UpdateTransactionInput>;
+export type ConditionTransactionResult = Promise<ConditionTransactionInput>;
+
+export interface GetTransaction<Key> {
+  (key: Key): GetTransactionResult;
+  (key: Key, settings?: ModelGetSettings): GetTransactionResult;
+  (
+    key: Key,
+    settings: ModelGetSettings & { return: 'document' },
+  ): GetTransactionResult;
+  (
+    key: Key,
+    settings: ModelGetSettings & { return: 'request' },
+  ): GetTransactionResult;
+}
+export interface CreateTransaction<Data> {
+  (document: Partial<Data>): CreateTransactionResult;
+  (
+    document: Partial<Data>,
+    settings: DocumentSaveSettings & { return: 'request' },
+  ): CreateTransactionResult;
+  (
+    document: Partial<Data>,
+    settings: DocumentSaveSettings & { return: 'document' },
+  ): CreateTransactionResult;
+  (
+    document: Partial<Data>,
+    settings?: DocumentSaveSettings,
+  ): CreateTransactionResult;
+}
+export interface DeleteTransaction<Key> {
+  (key: Key): DeleteTransactionResult;
+  (
+    key: Key,
+    settings: ModelDeleteSettings & { return: 'request' },
+  ): DeleteTransactionResult;
+  (
+    key: Key,
+    settings: ModelDeleteSettings & { return: null },
+  ): DeleteTransactionResult;
+  (key: Key, settings?: ModelDeleteSettings): DeleteTransactionResult;
+}
+export interface UpdateTransaction<Key, Data> {
+  (obj: Data): UpdateTransactionResult;
+  (keyObj: Key, updateObj: Partial<Data>): UpdateTransactionResult;
+  (
+    keyObj: Key,
+    updateObj: Partial<Data>,
+    settings: ModelUpdateSettings & { return: 'document' },
+  ): UpdateTransactionResult;
+  (
+    keyObj: Key,
+    updateObj: Partial<Data>,
+    settings: ModelUpdateSettings & { return: 'request' },
+  ): UpdateTransactionResult;
+  (
+    keyObj: Key,
+    updateObj?: Partial<Data>,
+    settings?: ModelUpdateSettings,
+  ): UpdateTransactionResult;
+}
+export interface ConditionTransaction<Key> {
+  (key: Key, condition: Condition): ConditionTransactionResult;
+}
+
+type TransactionType<Data, Key> = {
+  get: GetTransaction<Data>;
+  create: CreateTransaction<Data>;
+  delete: DeleteTransaction<Key>;
+  update: UpdateTransaction<Data, Key>;
+  condition: ConditionTransaction<Key>;
+};
