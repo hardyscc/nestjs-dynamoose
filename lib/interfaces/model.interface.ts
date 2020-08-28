@@ -335,7 +335,7 @@ export interface BasicOperators<T> {
   ge(value: any): T;
   beginsWith(value: any): T;
   contains(value: any): T;
-  exists(value: any): T;
+  exists(): T;
   in(value: any): T;
   between(...values: any[]): T;
 }
