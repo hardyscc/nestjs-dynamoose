@@ -433,6 +433,6 @@ type TransactionType<Data, Key> = {
   get: GetTransaction<Data>;
   create: CreateTransaction<Data>;
   delete: DeleteTransaction<Key>;
-  update: UpdateTransaction<Data, Key>;
+  update: UpdateTransaction<Key, Data>;
   condition: ConditionTransaction<Key>;
 };
