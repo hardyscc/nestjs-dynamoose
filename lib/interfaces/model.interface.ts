@@ -408,20 +408,20 @@ export interface DeleteTransaction<Key> {
 }
 export interface UpdateTransaction<Key, Data> {
   (obj: Data): UpdateTransactionResult;
-  (keyObj: Key, updateObj: Partial<Data>): UpdateTransactionResult;
+  (keyObj: Key, updateObj: UpdatePartial<Data>): UpdateTransactionResult;
   (
     keyObj: Key,
-    updateObj: Partial<Data>,
+    updateObj: UpdatePartial<Data>,
     settings: ModelUpdateSettings & { return: 'document' },
   ): UpdateTransactionResult;
   (
     keyObj: Key,
-    updateObj: Partial<Data>,
+    updateObj: UpdatePartial<Data>,
     settings: ModelUpdateSettings & { return: 'request' },
   ): UpdateTransactionResult;
   (
     keyObj: Key,
-    updateObj?: Partial<Data>,
+    updateObj?: UpdatePartial<Data>,
     settings?: ModelUpdateSettings,
   ): UpdateTransactionResult;
 }
