@@ -319,7 +319,7 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
   serializeMany(
     documentsArray: Data[],
     nameOrOptions: SerializerOptions | string,
-  ): any;
+  ): ObjectType[];
 }
 
 export interface BasicOperators<T> {
