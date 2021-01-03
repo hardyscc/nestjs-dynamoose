@@ -76,6 +76,12 @@ export type UpdatePartial<T> =
   | { $ADD: Partial<T> }
   | { $REMOVE: Partial<T> };
 
+export interface SerializerOptions {
+  include?: string[];
+  exclude?: string[];
+  modify?: (serialized: ObjectType, original: ObjectType) => ObjectType;
+}
+
 export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
   query(condition?: ConditionInitalizer): Query<Data, Key>;
 
@@ -309,6 +315,11 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
   ): void;
 
   transaction: TransactionType<Data, Key>;
+
+  serializeMany(
+    documentsArray: Data[],
+    nameOrOptions: SerializerOptions | string,
+  ): any;
 }
 
 export interface BasicOperators<T> {
