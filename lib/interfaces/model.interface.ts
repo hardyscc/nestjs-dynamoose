@@ -5,6 +5,7 @@ import {
   ConditionInitalizer,
 } from 'dynamoose/dist/Condition';
 import { SortOrder } from 'dynamoose/dist/General';
+import { PopulateSettings } from 'dynamoose/dist/Populate';
 
 type OptionalOmit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>> &
   Partial<Pick<T, Extract<keyof T, K>>>;
@@ -19,8 +20,8 @@ export declare type CallbackType<R, E> = (
 ) => void;
 
 export interface DocumentArray<T> extends Array<T> {
-  populate: () => Promise<DocumentArray<T>>;
-  toJSON: () => ObjectType;
+  populate(): Promise<DocumentArray<T>>;
+  toJSON(): ObjectType;
 }
 
 export interface DocumentRetrieverResponse<T> extends Array<T> {
@@ -83,7 +84,16 @@ export interface SerializerOptions {
 }
 
 export type Document<T> = {
+  populate(): Promise<Document<T>>;
+  populate(callback: CallbackType<Document<T>, AWSError>): void;
+  populate(settings: PopulateSettings): Promise<Document<T>>;
+  populate(
+    settings: PopulateSettings,
+    callback: CallbackType<Document<T>, AWSError>,
+  ): void;
   serialize(nameOrOptions: SerializerOptions | string): ObjectType;
+  toJSON(): ObjectType;
+  original(): ObjectType;
 } & T;
 
 export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
