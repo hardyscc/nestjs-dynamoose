@@ -1,6 +1,6 @@
 {
   "name": "nestjs-dynamoose",
-  "version": "0.3.0-beta.1",
+  "version": "0.3.0-beta.2",
   "description": "Nest - modern, fast, powerful node.js web framework (@dynamoose)",
   "author": "Hardys",
   "repository": "https://github.com/hardyscc/nestjs-dynamoose.git",
