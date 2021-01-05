@@ -5,6 +5,7 @@ import {
   ConditionInitalizer,
 } from 'dynamoose/dist/Condition';
 import { SortOrder } from 'dynamoose/dist/General';
+import { PopulateSettings } from 'dynamoose/dist/Populate';
 
 type OptionalOmit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>> &
   Partial<Pick<T, Extract<keyof T, K>>>;
@@ -19,8 +20,8 @@ export declare type CallbackType<R, E> = (
 ) => void;
 
 export interface DocumentArray<T> extends Array<T> {
-  populate: () => Promise<DocumentArray<T>>;
-  toJSON: () => ObjectType;
+  populate(): Promise<DocumentArray<T>>;
+  toJSON(): ObjectType;
 }
 
 export interface DocumentRetrieverResponse<T> extends Array<T> {
@@ -76,28 +77,55 @@ export type UpdatePartial<T> =
   | { $ADD: Partial<T> }
   | { $REMOVE: Partial<T> };
 
+export interface SerializerOptions {
+  include?: string[];
+  exclude?: string[];
+  modify?: (serialized: ObjectType, original: ObjectType) => ObjectType;
+}
+
+export type Document<T> = {
+  populate(): Promise<Document<T>>;
+  populate(callback: CallbackType<Document<T>, AWSError>): void;
+  populate(settings: PopulateSettings): Promise<Document<T>>;
+  populate(
+    settings: PopulateSettings,
+    callback: CallbackType<Document<T>, AWSError>,
+  ): void;
+  serialize(nameOrOptions: SerializerOptions | string): ObjectType;
+  toJSON(): ObjectType;
+  original(): ObjectType;
+} & T;
+
 export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
-  query(condition?: ConditionInitalizer): Query<Data, Key>;
+  query(condition?: ConditionInitalizer): Query<Document<Data>, Key>;
 
-  scan(condition?: ConditionInitalizer): Scan<Data, Key>;
+  scan(condition?: ConditionInitalizer): Scan<Document<Data>, Key>;
 
-  batchGet(keys: Key[]): Promise<ModelBatchGetDocumentsResponse<Data>>;
   batchGet(
     keys: Key[],
-    callback: CallbackType<ModelBatchGetDocumentsResponse<Data>, AWSError>,
+  ): Promise<ModelBatchGetDocumentsResponse<Document<Data>>>;
+  batchGet(
+    keys: Key[],
+    callback: CallbackType<
+      ModelBatchGetDocumentsResponse<Document<Data>>,
+      AWSError
+    >,
   ): void;
   batchGet(
     keys: Key[],
     settings: ModelBatchGetSettings & {
       return: 'documents';
     },
-  ): Promise<ModelBatchGetDocumentsResponse<Data>>;
+  ): Promise<ModelBatchGetDocumentsResponse<Document<Data>>>;
   batchGet(
     keys: Key[],
     settings: ModelBatchGetSettings & {
       return: 'documents';
     },
-    callback: CallbackType<ModelBatchGetDocumentsResponse<Data>, AWSError>,
+    callback: CallbackType<
+      ModelBatchGetDocumentsResponse<Document<Data>>,
+      AWSError
+    >,
   ): void;
   batchGet(
     keys: Key[],
@@ -115,10 +143,10 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
 
   batchPut(
     documents: OptionalOmit<Data, DefaultFields>[],
-  ): Promise<UnprocessedItems<Data>>;
+  ): Promise<UnprocessedItems<Document<Data>>>;
   batchPut(
     documents: OptionalOmit<Data, DefaultFields>[],
-    callback: CallbackType<UnprocessedItems<Data>, AWSError>,
+    callback: CallbackType<UnprocessedItems<Document<Data>>, AWSError>,
   ): void;
   batchPut(
     documents: OptionalOmit<Data, DefaultFields>[],
@@ -138,13 +166,13 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     settings: ModelBatchPutSettings & {
       return: 'response';
     },
-  ): Promise<UnprocessedItems<Data>>;
+  ): Promise<UnprocessedItems<Document<Data>>>;
   batchPut(
     documents: OptionalOmit<Data, DefaultFields>[],
     settings: ModelBatchPutSettings & {
       return: 'response';
     },
-    callback: CallbackType<UnprocessedItems<Data>, AWSError>,
+    callback: CallbackType<UnprocessedItems<Document<Data>>, AWSError>,
   ): void;
 
   batchDelete(keys: Key[]): Promise<UnprocessedItems<Key>>;
@@ -179,13 +207,13 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     callback: CallbackType<DynamoDB.BatchWriteItemInput, AWSError>,
   ): void;
 
-  update(obj: Data): Promise<Data>;
-  update(obj: Data, callback: CallbackType<Data, AWSError>): void;
-  update(keyObj: Key, updateObj: UpdatePartial<Data>): Promise<Data>;
+  update(obj: Data): Promise<Document<Data>>;
+  update(obj: Data, callback: CallbackType<Document<Data>, AWSError>): void;
+  update(keyObj: Key, updateObj: UpdatePartial<Data>): Promise<Document<Data>>;
   update(
     keyObj: Key,
     updateObj: UpdatePartial<Data>,
-    callback: CallbackType<Data, AWSError>,
+    callback: CallbackType<Document<Data>, AWSError>,
   ): void;
   update(
     keyObj: Key,
@@ -193,14 +221,14 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     settings: ModelUpdateSettings & {
       return: 'document';
     },
-  ): Promise<Data>;
+  ): Promise<Document<Data>>;
   update(
     keyObj: Key,
     updateObj: UpdatePartial<Data>,
     settings: ModelUpdateSettings & {
       return: 'document';
     },
-    callback: CallbackType<Data, AWSError>,
+    callback: CallbackType<Document<Data>, AWSError>,
   ): void;
   update(
     keyObj: Key,
@@ -218,10 +246,10 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     callback: CallbackType<DynamoDB.UpdateItemInput, AWSError>,
   ): void;
 
-  create(document: OptionalOmit<Data, DefaultFields>): Promise<Data>;
+  create(document: OptionalOmit<Data, DefaultFields>): Promise<Document<Data>>;
   create(
     document: OptionalOmit<Data, DefaultFields>,
-    callback: CallbackType<Data, AWSError>,
+    callback: CallbackType<Document<Data>, AWSError>,
   ): void;
   create(
     document: OptionalOmit<Data, DefaultFields>,
@@ -241,13 +269,13 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     settings: DocumentSaveSettings & {
       return: 'document';
     },
-  ): Promise<Data>;
+  ): Promise<Document<Data>>;
   create(
     document: OptionalOmit<Data, DefaultFields>,
     settings: DocumentSaveSettings & {
       return: 'document';
     },
-    callback: CallbackType<Data, AWSError>,
+    callback: CallbackType<Document<Data>, AWSError>,
   ): void;
 
   delete(key: Key): Promise<void>;
@@ -279,20 +307,20 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     callback: CallbackType<void, AWSError>,
   ): void;
 
-  get(key: Key): Promise<Data>;
-  get(key: Key, callback: CallbackType<Data, AWSError>): void;
+  get(key: Key): Promise<Document<Data>>;
+  get(key: Key, callback: CallbackType<Document<Data>, AWSError>): void;
   get(
     key: Key,
     settings: ModelGetSettings & {
       return: 'document';
     },
-  ): Promise<Data>;
+  ): Promise<Document<Data>>;
   get(
     key: Key,
     settings: ModelGetSettings & {
       return: 'document';
     },
-    callback: CallbackType<Data, AWSError>,
+    callback: CallbackType<Document<Data>, AWSError>,
   ): void;
   get(
     key: Key,
@@ -309,6 +337,11 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
   ): void;
 
   transaction: TransactionType<Data, Key>;
+
+  serializeMany(
+    documentsArray: Data[],
+    nameOrOptions: SerializerOptions | string,
+  ): ObjectType[];
 }
 
 export interface BasicOperators<T> {
