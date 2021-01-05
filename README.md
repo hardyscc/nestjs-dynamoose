@@ -161,6 +161,8 @@ export class UserService {
 
 **1. Transaction Support**
 
+Both `User` and `Account` model objects will commit in same transaction.
+
 ```ts
 import { Injectable } from '@nestjs/common';
 import { InjectModel, Model, TransactionSupport } from 'nestjs-dynamoose';
@@ -184,6 +186,42 @@ export class UserService extends TransactionSupport {
       this.accountModel.transaction.create(account),
     ]);
   }
+}
+```
+
+**2. Serializers Support**
+
+Define the additional `serializers` under `DynamooseModule.forFeature()`.
+
+```ts
+@Module({
+  imports: [
+    DynamooseModule.forFeature([
+      {
+        name: 'User',
+        schema: UserSchema,
+        serializers: {
+          frontend: { exclude: ['status'] },
+        },
+      },
+    ]),
+  ],
+  ...
+})
+export class UserModule {}
+```
+
+Call the `serialize` function to exclude the `status` field.
+
+```ts
+@Injectable()
+export class UserService {
+  ...
+  async create(user: User) {
+    const createdUser = await this.userModel.create(user);
+    return createdUser.serialize('frontend');
+  }
+  ...
 }
 ```
 
