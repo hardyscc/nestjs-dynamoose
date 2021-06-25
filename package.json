@@ -33,7 +33,7 @@
     "lint-staged": "11.0.0",
     "prettier": "2.3.1",
     "reflect-metadata": "0.1.13",
-    "release-it": "14.9.0",
+    "release-it": "14.10.0",
     "rxjs": "7.1.0",
     "rxjs-compat": "6.6.7",
     "ts-node": "10.0.0",
