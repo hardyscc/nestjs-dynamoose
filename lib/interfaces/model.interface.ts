@@ -42,29 +42,32 @@ export interface QueryResponse<T> extends DocumentRetrieverResponse<T> {
 export interface UnprocessedItems<T> {
   unprocessedItems: T[];
 }
-
 export interface ModelGetSettings {
-  return: 'document' | 'request';
+  return?: 'document' | 'request';
   attributes?: string[];
+  consistent?: boolean;
 }
 export interface ModelDeleteSettings {
-  return: null | 'request';
+  return?: null | 'request';
+  condition?: Condition;
 }
 export interface ModelBatchPutSettings {
-  return: 'response' | 'request';
+  return?: 'response' | 'request';
 }
 export interface ModelUpdateSettings {
-  return: 'document' | 'request';
+  return?: 'document' | 'request';
   condition?: Condition;
+  returnValues?: DynamoDB.ReturnValue;
 }
 export interface ModelBatchGetDocumentsResponse<T> extends DocumentArray<T> {
   unprocessedKeys: ObjectType[];
 }
 export interface ModelBatchGetSettings {
-  return: 'documents' | 'request';
+  return?: 'documents' | 'request';
+  attributes?: string[];
 }
 export interface ModelBatchDeleteSettings {
-  return: 'response' | 'request';
+  return?: 'response' | 'request';
 }
 
 export interface DocumentSaveSettings {
