@@ -25,7 +25,7 @@
     "@types/node": "16.11.21",
     "@typescript-eslint/eslint-plugin": "5.9.1",
     "@typescript-eslint/parser": "5.9.1",
-    "dynamoose": "2.8.4",
+    "dynamoose": "2.8.5",
     "eslint": "8.6.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-import": "2.25.4",
