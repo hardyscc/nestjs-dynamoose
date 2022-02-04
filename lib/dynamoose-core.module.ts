@@ -21,29 +21,25 @@ import {
   DynamooseOptionsFactory,
 } from './interfaces/dynamoose-options.interface';
 
+function setLocal(local: boolean | string) {
+  (typeof local === 'boolean' && aws.ddb.local()) ||
+    aws.ddb.local(local as string);
+}
+
+function setLogger(definedLogger: boolean | LoggerService) {
+  const loggerService: LoggerService =
+    typeof definedLogger === 'boolean'
+      ? new Logger(DynamooseModule.name)
+      : definedLogger;
+  logger.providers.add(new LoggerProvider(loggerService));
+}
+
 function initialization(options: DynamooseModuleOptions) {
-  if (options.aws) {
-    aws.sdk.config.update(options.aws);
-  }
-  if (options.local) {
-    if (typeof options.local === 'boolean') {
-      aws.ddb.local();
-    } else {
-      aws.ddb.local(options.local);
-    }
-  }
-  if (options.model) {
-    model.defaults.set(options.model);
-  }
-  if (options.logger) {
-    let loggerService: LoggerService;
-    if (typeof options.logger === 'boolean') {
-      loggerService = new Logger(DynamooseModule.name);
-    } else {
-      loggerService = options.logger;
-    }
-    logger.providers.add(new LoggerProvider(loggerService));
-  }
+  !!options?.aws && aws.sdk.config.update(options.aws);
+  !!options?.local && setLocal(options.local);
+  !!options?.model && model.defaults.set(options.model);
+  !!options?.logger && setLogger(options.logger);
+  !!options?.ddb && aws.ddb.set(options.ddb);
 }
 
 @Global()
@@ -106,15 +102,14 @@ export class DynamooseCoreModule {
     }
 
     const inject = [
-      (options.useClass || options.useExisting) as Type<
-        DynamooseOptionsFactory
-      >,
+      (options.useClass ||
+        options.useExisting) as Type<DynamooseOptionsFactory>,
     ];
 
     return {
       provide: DYNAMOOSE_MODULE_OPTIONS,
       useFactory: async (optionsFactory: DynamooseOptionsFactory) =>
-        await optionsFactory.createDynamooseOptions(),
+        optionsFactory.createDynamooseOptions(),
       inject,
     };
   }

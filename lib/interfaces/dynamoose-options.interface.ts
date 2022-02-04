@@ -1,5 +1,6 @@
 import { LoggerService } from '@nestjs/common';
 import { ModuleMetadata, Type } from '@nestjs/common/interfaces';
+import AWS = require('aws-sdk');
 import { ModelOptionsOptional } from 'dynamoose/dist/Model';
 
 export interface DynamooseModuleOptions {
@@ -11,6 +12,7 @@ export interface DynamooseModuleOptions {
   local?: boolean | string;
   model?: ModelOptionsOptional;
   logger?: boolean | LoggerService;
+  ddb?: AWS.DynamoDB;
 }
 
 export interface DynamooseOptionsFactory {
