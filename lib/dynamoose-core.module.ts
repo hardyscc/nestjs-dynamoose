@@ -3,7 +3,6 @@ import {
   DynamicModule,
   Global,
   Logger,
-  LoggerService,
   Module,
   Provider,
   Type,
@@ -32,17 +31,20 @@ function initialization(options: DynamooseModuleOptions) {
       aws.ddb.local(options.local);
     }
   }
+  if (options.ddb) {
+    aws.ddb.set(options.ddb);
+  }
   if (options.model) {
     model.defaults.set(options.model);
   }
   if (options.logger) {
-    let loggerService: LoggerService;
-    if (typeof options.logger === 'boolean') {
-      loggerService = new Logger(DynamooseModule.name);
-    } else {
-      loggerService = options.logger;
-    }
-    logger.providers.add(new LoggerProvider(loggerService));
+    logger.providers.add(
+      new LoggerProvider(
+        typeof options.logger === 'boolean'
+          ? new Logger(DynamooseModule.name)
+          : options.logger,
+      ),
+    );
   }
 }
 
@@ -106,9 +108,8 @@ export class DynamooseCoreModule {
     }
 
     const inject = [
-      (options.useClass || options.useExisting) as Type<
-        DynamooseOptionsFactory
-      >,
+      (options.useClass ||
+        options.useExisting) as Type<DynamooseOptionsFactory>,
     ];
 
     return {
