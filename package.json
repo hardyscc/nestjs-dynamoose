@@ -27,7 +27,7 @@
     "@typescript-eslint/parser": "5.12.1",
     "dynamoose": "2.8.5",
     "eslint": "8.10.0",
-    "eslint-config-prettier": "8.4.0",
+    "eslint-config-prettier": "8.5.0",
     "eslint-plugin-import": "2.25.4",
     "husky": "7.0.4",
     "lint-staged": "12.3.4",
