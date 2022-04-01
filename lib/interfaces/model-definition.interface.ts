@@ -7,4 +7,5 @@ export type ModelDefinition = {
   schema: Schema | SchemaDefinition | (Schema | SchemaDefinition)[];
   options?: ModelOptionsOptional;
   serializers?: { [key: string]: SerializerOptions };
+  provide?: string;
 };

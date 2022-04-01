@@ -7,7 +7,7 @@ import { AsyncModelFactory } from './interfaces/async-model-factory.interface';
 
 export function createDynamooseProviders(models: ModelDefinition[] = []) {
   const providers = (models || []).map((model) => ({
-    provide: getModelToken(model.name),
+    provide: getModelToken(model.provide ?? model.name),
     useFactory: () => {
       const modelInstance = dynamoose.model(
         model.name,
@@ -31,7 +31,7 @@ export function createDynamooseAsyncProviders(
 ) {
   const providers = (modelFactories || []).map((model) => [
     {
-      provide: getModelToken(model.name),
+      provide: getModelToken(model.provide ?? model.name),
       useFactory: async (...args: unknown[]) => {
         const schema = await model.useFactory(...args);
         const modelInstance = dynamoose.model(
