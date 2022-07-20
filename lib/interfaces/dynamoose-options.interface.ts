@@ -7,6 +7,7 @@ export interface DynamooseModuleOptions {
   aws?: {
     accessKeyId?: string;
     secretAccessKey?: string;
+    sessionToken?: string;
     region?: string;
   };
   local?: boolean | string;
