@@ -1,9 +1,9 @@
 {
-  "name": "nestjs-dynamoose",
-  "version": "0.4.0",
+  "name": "cbumstead-nestjs-dynamoose",
+  "version": "0.4.1",
   "description": "Nest - modern, fast, powerful node.js web framework (@dynamoose)",
   "author": "Hardys",
-  "repository": "https://github.com/hardyscc/nestjs-dynamoose.git",
+  "repository": "https://github.com/cbumstead/nestjs-dynamoose",
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"lib/**/*.ts\" --max-warnings 0",
