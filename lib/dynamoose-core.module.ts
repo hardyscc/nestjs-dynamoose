@@ -7,7 +7,7 @@ import {
   Provider,
   Type,
 } from '@nestjs/common';
-import { aws, logger, model, Table } from 'dynamoose';
+import { aws, logger, Table } from 'dynamoose';
 import { LoggerProvider } from './dynamoose-logger.provider';
 import {
   DYNAMOOSE_INITIALIZATION,
@@ -19,13 +19,12 @@ import {
   DynamooseModuleOptions,
   DynamooseOptionsFactory,
 } from './interfaces/dynamoose-options.interface';
-import { DynamoDB } from '@aws-sdk/client-dynamodb';
 
 async function initialization(options: DynamooseModuleOptions) {
   if (options.ddb) {
     aws.ddb.set(options.ddb);
   } else if (options.aws) {
-    aws.ddb.set(new DynamoDB(options.aws));
+    aws.ddb.set(new aws.ddb.DynamoDB(options.aws));
   }
   if (options.local) {
     if (typeof options.local === 'boolean') {

@@ -1,4 +1,4 @@
-import * as DynamoDB from "@aws-sdk/client-dynamodb";
+import * as DynamoDB from '@aws-sdk/client-dynamodb';
 import {
   Condition,
   ConditionFunction,
