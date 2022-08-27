@@ -1,8 +1,8 @@
-import { AWSError, DynamoDB } from 'aws-sdk';
+import * as DynamoDB from '@aws-sdk/client-dynamodb';
 import {
   Condition,
   ConditionFunction,
-  ConditionInitalizer,
+  ConditionInitializer,
 } from 'dynamoose/dist/Condition';
 import { SortOrder } from 'dynamoose/dist/General';
 import { PopulateSettings } from 'dynamoose/dist/Populate';
@@ -88,11 +88,11 @@ export interface SerializerOptions {
 
 export type Document<T> = {
   populate(): Promise<Document<T>>;
-  populate(callback: CallbackType<Document<T>, AWSError>): void;
+  populate(callback: CallbackType<Document<T>, any>): void;
   populate(settings: PopulateSettings): Promise<Document<T>>;
   populate(
     settings: PopulateSettings,
-    callback: CallbackType<Document<T>, AWSError>,
+    callback: CallbackType<Document<T>, any>,
   ): void;
   serialize(nameOrOptions: SerializerOptions | string): ObjectType;
   toJSON(): ObjectType;
@@ -100,9 +100,9 @@ export type Document<T> = {
 } & T;
 
 export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
-  query(condition?: ConditionInitalizer): Query<Document<Data>, Key>;
+  query(condition?: ConditionInitializer): Query<Document<Data>, Key>;
 
-  scan(condition?: ConditionInitalizer): Scan<Document<Data>, Key>;
+  scan(condition?: ConditionInitializer): Scan<Document<Data>, Key>;
 
   batchGet(
     keys: Key[],
@@ -111,7 +111,7 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     keys: Key[],
     callback: CallbackType<
       ModelBatchGetDocumentsResponse<Document<Data>>,
-      AWSError
+      any
     >,
   ): void;
   batchGet(
@@ -127,7 +127,7 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     },
     callback: CallbackType<
       ModelBatchGetDocumentsResponse<Document<Data>>,
-      AWSError
+      any
     >,
   ): void;
   batchGet(
@@ -141,7 +141,7 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     settings: ModelBatchGetSettings & {
       return: 'request';
     },
-    callback: CallbackType<DynamoDB.BatchGetItemInput, AWSError>,
+    callback: CallbackType<DynamoDB.BatchGetItemInput, any>,
   ): void;
 
   batchPut(
@@ -149,7 +149,7 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
   ): Promise<UnprocessedItems<Document<Data>>>;
   batchPut(
     documents: OptionalOmit<Data, DefaultFields>[],
-    callback: CallbackType<UnprocessedItems<Document<Data>>, AWSError>,
+    callback: CallbackType<UnprocessedItems<Document<Data>>, any>,
   ): void;
   batchPut(
     documents: OptionalOmit<Data, DefaultFields>[],
@@ -162,7 +162,7 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     settings: ModelBatchPutSettings & {
       return: 'request';
     },
-    callback: CallbackType<DynamoDB.BatchWriteItemInput, AWSError>,
+    callback: CallbackType<DynamoDB.BatchWriteItemInput, any>,
   ): void;
   batchPut(
     documents: OptionalOmit<Data, DefaultFields>[],
@@ -175,13 +175,13 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     settings: ModelBatchPutSettings & {
       return: 'response';
     },
-    callback: CallbackType<UnprocessedItems<Document<Data>>, AWSError>,
+    callback: CallbackType<UnprocessedItems<Document<Data>>, any>,
   ): void;
 
   batchDelete(keys: Key[]): Promise<UnprocessedItems<Key>>;
   batchDelete(
     keys: Key[],
-    callback: CallbackType<UnprocessedItems<Key>, AWSError>,
+    callback: CallbackType<UnprocessedItems<Key>, any>,
   ): void;
   batchDelete(
     keys: Key[],
@@ -194,7 +194,7 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     settings: ModelBatchDeleteSettings & {
       return: 'response';
     },
-    callback: CallbackType<UnprocessedItems<Key>, AWSError>,
+    callback: CallbackType<UnprocessedItems<Key>, any>,
   ): Promise<UnprocessedItems<Key>>;
   batchDelete(
     keys: Key[],
@@ -207,16 +207,16 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     settings: ModelBatchDeleteSettings & {
       return: 'request';
     },
-    callback: CallbackType<DynamoDB.BatchWriteItemInput, AWSError>,
+    callback: CallbackType<DynamoDB.BatchWriteItemInput, any>,
   ): void;
 
   update(obj: Data): Promise<Document<Data>>;
-  update(obj: Data, callback: CallbackType<Document<Data>, AWSError>): void;
+  update(obj: Data, callback: CallbackType<Document<Data>, any>): void;
   update(keyObj: Key, updateObj: UpdatePartial<Data>): Promise<Document<Data>>;
   update(
     keyObj: Key,
     updateObj: UpdatePartial<Data>,
-    callback: CallbackType<Document<Data>, AWSError>,
+    callback: CallbackType<Document<Data>, any>,
   ): void;
   update(
     keyObj: Key,
@@ -231,7 +231,7 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     settings: ModelUpdateSettings & {
       return: 'document';
     },
-    callback: CallbackType<Document<Data>, AWSError>,
+    callback: CallbackType<Document<Data>, any>,
   ): void;
   update(
     keyObj: Key,
@@ -246,13 +246,13 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     settings: ModelUpdateSettings & {
       return: 'request';
     },
-    callback: CallbackType<DynamoDB.UpdateItemInput, AWSError>,
+    callback: CallbackType<DynamoDB.UpdateItemInput, any>,
   ): void;
 
   create(document: OptionalOmit<Data, DefaultFields>): Promise<Document<Data>>;
   create(
     document: OptionalOmit<Data, DefaultFields>,
-    callback: CallbackType<Document<Data>, AWSError>,
+    callback: CallbackType<Document<Data>, any>,
   ): void;
   create(
     document: OptionalOmit<Data, DefaultFields>,
@@ -265,7 +265,7 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     settings: DocumentSaveSettings & {
       return: 'request';
     },
-    callback: CallbackType<DynamoDB.PutItemInput, AWSError>,
+    callback: CallbackType<DynamoDB.PutItemInput, any>,
   ): void;
   create(
     document: OptionalOmit<Data, DefaultFields>,
@@ -278,11 +278,11 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     settings: DocumentSaveSettings & {
       return: 'document';
     },
-    callback: CallbackType<Document<Data>, AWSError>,
+    callback: CallbackType<Document<Data>, any>,
   ): void;
 
   delete(key: Key): Promise<void>;
-  delete(key: Key, callback: CallbackType<void, AWSError>): void;
+  delete(key: Key, callback: CallbackType<void, any>): void;
   delete(
     key: Key,
     settings: ModelDeleteSettings & {
@@ -294,7 +294,7 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     settings: ModelDeleteSettings & {
       return: 'request';
     },
-    callback: CallbackType<DynamoDB.DeleteItemInput, AWSError>,
+    callback: CallbackType<DynamoDB.DeleteItemInput, any>,
   ): void;
   delete(
     key: Key,
@@ -307,11 +307,11 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     settings: ModelDeleteSettings & {
       return: null;
     },
-    callback: CallbackType<void, AWSError>,
+    callback: CallbackType<void, any>,
   ): void;
 
   get(key: Key): Promise<Document<Data>>;
-  get(key: Key, callback: CallbackType<Document<Data>, AWSError>): void;
+  get(key: Key, callback: CallbackType<Document<Data>, any>): void;
   get(
     key: Key,
     settings: ModelGetSettings & {
@@ -323,7 +323,7 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     settings: ModelGetSettings & {
       return: 'document';
     },
-    callback: CallbackType<Document<Data>, AWSError>,
+    callback: CallbackType<Document<Data>, any>,
   ): void;
   get(
     key: Key,
@@ -336,7 +336,7 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     settings: ModelGetSettings & {
       return: 'request';
     },
-    callback: CallbackType<DynamoDB.GetItemInput, AWSError>,
+    callback: CallbackType<DynamoDB.GetItemInput, any>,
   ): void;
 
   transaction: TransactionType<Data, Key>;
@@ -378,13 +378,13 @@ export interface BasicOperators<T> {
 
 export interface Query<Data, Key> extends BasicOperators<Query<Data, Key>> {
   exec(): Promise<QueryResponse<Data>>;
-  exec(callback: CallbackType<QueryResponse<Data>, AWSError>): void;
+  exec(callback: CallbackType<QueryResponse<Data>, any>): void;
   sort(order: SortOrder): Query<Data, Key>;
 }
 
 export interface Scan<Data, Key> extends BasicOperators<Scan<Data, Key>> {
   exec(): Promise<ScanResponse<Data>>;
-  exec(callback: CallbackType<ScanResponse<Data>, AWSError>): void;
+  exec(callback: CallbackType<ScanResponse<Data>, any>): void;
   parallel(value: number): Scan<Data, Key>;
 }
 
