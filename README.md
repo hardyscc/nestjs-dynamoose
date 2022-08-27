@@ -56,7 +56,7 @@ interface DynamooseModuleOptions {
   };
   local?: boolean | string;
   ddb?: DynamoDB;
-  model?: ModelOptionsOptional;
+  table?: TableOptionsOptional;
   logger?: boolean | LoggerService;
 }
 ```
