@@ -1,2 +1,2 @@
 export const DYNAMOOSE_MODULE_OPTIONS = 'DynamooseModuleOptions';
-export const DYNAMOOSE_INITIALIZATION = 'DynamooseInitialiation';
+export const DYNAMOOSE_INITIALIZATION = 'DynamooseInitialization';

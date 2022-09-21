@@ -1,15 +1,16 @@
 import { DynamicModule, flatten, Module } from '@nestjs/common';
 import { DynamooseCoreModule } from './dynamoose-core.module';
 import {
-  createDynamooseAsyncProviders,
-  createDynamooseProviders,
+  createDynamooseAsyncProviders, createDynamooseProviders,
+  createDynamooseTableProviders,
 } from './dynamoose.providers';
-import { ModelDefinition } from './interfaces';
 import { AsyncModelFactory } from './interfaces/async-model-factory.interface';
 import {
   DynamooseModuleAsyncOptions,
   DynamooseModuleOptions,
-} from './interfaces/dynamoose-options.interface';
+  ModelDefinition,
+  TableDefinition,
+} from './interfaces';
 
 @Module({})
 export class DynamooseModule {
@@ -43,6 +44,15 @@ export class DynamooseModule {
     return {
       module: DynamooseModule,
       imports: [...uniqImports],
+      providers: providers,
+      exports: providers,
+    };
+  }
+
+  static forTable(table: TableDefinition): DynamicModule {
+    const providers = createDynamooseTableProviders(table);
+    return {
+      module: DynamooseModule,
       providers: providers,
       exports: providers,
     };

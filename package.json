@@ -8,7 +8,12 @@
   "scripts": {
     "lint": "eslint \"lib/**/*.ts\" --max-warnings 0",
     "format": "prettier \"lib/**/*.ts\" --write",
-    "build": "rm -rf dist && tsc -p tsconfig.json",
+    "build:clean": "rm -rf dist",
+    "prebuild": "npm run build:clean",
+    "build": "tsc -p tsconfig.json",
+    "build:sourcemap": "npm run build -- --sourceMap",
+    "build:watch": "npm run build -- -w",
+    "build:sourcemap:watch": "npm run build:sourcemap -- -w",
     "precommit": "lint-staged",
     "prepublish:npm": "npm run build",
     "publish:npm": "npm publish --access public",

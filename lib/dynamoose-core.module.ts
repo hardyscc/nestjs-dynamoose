@@ -22,6 +22,8 @@ import {
 
 async function initialization(options: DynamooseModuleOptions) {
   if (options.ddb) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     aws.ddb.set(options.ddb);
   } else if (options.aws) {
     aws.ddb.set(new aws.ddb.DynamoDB(options.aws));

@@ -1,12 +1,12 @@
-import { flatten } from '@nestjs/common';
+import { FactoryProvider, flatten } from '@nestjs/common';
 import * as dynamoose from 'dynamoose';
-import { getModelToken } from './common/dynamoose.utils';
+import { getModelToken, getTableToken } from './common/dynamoose.utils';
 import { DYNAMOOSE_INITIALIZATION } from './dynamoose.constants';
-import { ModelDefinition } from './interfaces';
+import { ModelDefinition, TableDefinition } from './interfaces';
 import { AsyncModelFactory } from './interfaces/async-model-factory.interface';
 
 export function createDynamooseProviders(models: ModelDefinition[] = []) {
-  const providers = (models || []).map((model) => ({
+  return (models || []).map((model) => ({
     provide: getModelToken(model.name),
     useFactory: () => {
       const modelInstance = dynamoose.model(
@@ -23,12 +23,26 @@ export function createDynamooseProviders(models: ModelDefinition[] = []) {
     },
     inject: [DYNAMOOSE_INITIALIZATION],
   }));
-  return providers;
+}
+
+export function createDynamooseTableProviders(table: TableDefinition) {
+  const modelProviders = createDynamooseProviders(table.models);
+
+  return [
+    {
+      provide: getTableToken(table.name),
+      useFactory: (...models) => (
+        new dynamoose.Table(table.name, models, table.options)
+      ),
+      inject: [...table.models.map((model) => getModelToken(model.name))],
+    },
+    ...modelProviders,
+  ];
 }
 
 export function createDynamooseAsyncProviders(
   modelFactories: AsyncModelFactory[] = [],
-) {
+): FactoryProvider[] {
   const providers = (modelFactories || []).map((model) => [
     {
       provide: getModelToken(model.name),
