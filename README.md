@@ -99,7 +99,7 @@ export interface User extends UserKey {
 
 `UserKey` holds the hashKey/partition key and (optionally) the rangeKey/sort key. `User` holds all attributes of the document/item. When creating this two interfaces and using when injecting your model you will have typechecking when using operations like `Model.update()`.
 
-**3. Add the models you want to inject to your modules**
+**3. Add the models and tables you want to inject to your modules**
 
 This can be a feature module (as shown below) or within the root AppModule next to `DynamooseModule.forRoot()`.
 
@@ -124,7 +124,40 @@ export class UserModule {}
 
 There is also `forFeatureAsync(factories?: AsyncModelFactory[])` if you want to use a factory with dependency injection.
 
-**4. Inject and use your model**
+If you want to store different models within the same table to utilize the DynamoDB's single-table approach, you can use a DynamooseModule.forTable provider:
+
+`src/pet/pet.module.ts`
+
+```ts
+import { DynamooseModule } from 'nestjs-dynamoose';
+import { CatSchema } from './user.schema';
+import { CatService } from './cat.service';
+import { DogSchema } from './dog.schema';
+import { DogService } from './dog.service';
+
+@Module({
+  imports: [
+    DynamooseModule.forTable({
+      name: 'pets',
+      models: [{
+        name: 'Cat',
+        schema: CatSchema,
+      }, {
+        name: 'Dog',
+        schema: DogSchema,
+      }],
+    }),
+  ],
+  providers: [
+    CatService,
+    DogService,
+    ...
+  ],
+})
+export class PetModule {}
+```
+
+**4. Inject and use your model or table**
 
 `src/user/user.service.ts`
 
@@ -155,6 +188,27 @@ export class UserService {
   findAll() {
     return this.userModel.scan().exec();
   }
+}
+```
+
+or if you want to inject a table provided with DynamooseModule.forTable:
+
+`src/pet/pet.service.ts`
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { InjectModel, Model } from 'nestjs-dynamoose';
+import { Table } from 'dynamoose/dist/Table';
+import { Cat, CatKey } from './cat.interface';
+
+@Injectable()
+export class PetService {
+  constructor(
+    @InjectTable('pets')
+    private petsTable: Table,
+    @InjectModel('Cat')
+    private catModel: Model<Cat, CatKey>,
+  ) {}
 }
 ```
 
