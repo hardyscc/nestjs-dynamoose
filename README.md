@@ -124,7 +124,7 @@ export class UserModule {}
 
 There is also `forFeatureAsync(factories?: AsyncModelFactory[])` if you want to use a factory with dependency injection.
 
-If you want to store different models within the same table to utilize the DynamoDB's single-table approach, you can use a DynamooseModule.forTable provider:
+If you want to store different models within the same table to utilise the DynamoDB's single-table approach, you can use a DynamooseModule.forTable provider:
 
 `src/pet/pet.module.ts`
 
