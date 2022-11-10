@@ -5,6 +5,7 @@
   "author": "Hardys",
   "repository": "https://github.com/hardyscc/nestjs-dynamoose.git",
   "license": "MIT",
+  "main": "dist/index.js",
   "scripts": {
     "lint": "eslint \"lib/**/*.ts\" --max-warnings 0",
     "format": "prettier \"lib/**/*.ts\" --write",
