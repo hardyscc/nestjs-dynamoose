@@ -78,7 +78,8 @@ export type UpdatePartial<T> =
   | Partial<T>
   | { $SET: Partial<T> }
   | { $ADD: Partial<T> }
-  | { $REMOVE: Partial<T> };
+  | { $REMOVE: Partial<T> }
+    | { $DELETE: Partial<T> };
 
 export interface SerializerOptions {
   include?: string[];
