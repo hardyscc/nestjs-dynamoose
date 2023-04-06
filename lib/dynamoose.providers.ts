@@ -10,7 +10,7 @@ export function createDynamooseProviders(models: ModelDefinition[] = []) {
     provide: getModelToken(model.name),
     useFactory: () => {
       const modelInstance = dynamoose.model(
-        model.name,
+        model.tableName || model.name,
         model.schema,
         model.options,
       );
@@ -33,14 +33,24 @@ export function createDynamooseAsyncProviders(
     {
       provide: getModelToken(model.name),
       useFactory: async (...args: unknown[]) => {
-        const schema = await model.useFactory(...args);
-        const modelInstance = dynamoose.model(
-          model.name,
-          schema,
-          model.options,
-        );
-        if (model.serializers) {
-          Object.entries(model.serializers).forEach(([key, value]) => {
+        const object = await model.useFactory(...args);
+
+        let modelDefinition: Omit<ModelDefinition, 'name'> | undefined;
+        let schema: ModelDefinition['schema'] | undefined;
+        if (object.hasOwnProperty('schema')) {
+          modelDefinition = object as Omit<ModelDefinition, 'name'>;
+          schema = modelDefinition.schema;
+        } else {
+          schema = object as ModelDefinition['schema'];
+        }
+        const tableName =
+          modelDefinition?.tableName || model.tableName || model.name;
+        const options = modelDefinition?.options || model.options;
+        const serializers = modelDefinition?.serializers || model.serializers;
+
+        const modelInstance = dynamoose.model(tableName, schema, options);
+        if (serializers) {
+          Object.entries(serializers).forEach(([key, value]) => {
             modelInstance.serializer.add(key, value);
           });
         }
