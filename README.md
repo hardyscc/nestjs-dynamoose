@@ -112,7 +112,10 @@ import { UserService } from './user.service';
 
 @Module({
   imports: [
-    DynamooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
+    DynamooseModule.forFeature([{
+      name: 'User',
+      tableName: 'user',
+      schema: UserSchema }]),
   ],
   providers: [
     UserService,
@@ -122,7 +125,40 @@ import { UserService } from './user.service';
 export class UserModule {}
 ```
 
-There is also `forFeatureAsync(factories?: AsyncModelFactory[])` if you want to use a factory with dependency injection.
+> `tableName` is optional. If it is not provided, `name` will be used as the table name.
+
+There is also `forFeatureAsync(factories?: AsyncModelFactory[])` if you want to use a factory with dependency injection. Notes that the first parameter of the `useFactory` callback is reserved for future use, so please just add `_,` to ignore it.
+
+The following example will use `USER_TABLE_NAME` environment variable as the table name.
+
+```ts
+import { DynamooseModule } from 'nestjs-dynamoose';
+import { UserSchema } from './user.schema';
+import { UserService } from './user.service';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    DynamooseModule.forFeatureAsync([
+      {
+        name: 'User',
+        useFactory: (_, configService: ConfigService) => {
+          return {
+            tableName: configService.get<string>('USER_TABLE_NAME'),
+            schema: UserSchema,
+          };
+        },
+        inject: [ConfigService],
+      },
+    ]),
+  ],
+  providers: [
+    UserService,
+    ...
+  ],
+})
+export class UserModule {}
+```
 
 **4. Inject and use your model**
 
