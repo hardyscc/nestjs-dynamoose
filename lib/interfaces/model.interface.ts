@@ -19,22 +19,22 @@ export declare type CallbackType<R, E> = (
   response?: R,
 ) => void;
 
-export interface DocumentArray<T> extends Array<T> {
-  populate(): Promise<DocumentArray<T>>;
+export interface ItemArray<T> extends Array<T> {
+  populate(): Promise<ItemArray<T>>;
   toJSON(): ObjectType;
 }
 
-export interface DocumentRetrieverResponse<T> extends Array<T> {
+export interface ItemRetrieverResponse<T> extends Array<T> {
   lastKey?: ObjectType;
   count: number;
 }
 
-export interface ScanResponse<T> extends DocumentRetrieverResponse<T> {
+export interface ScanResponse<T> extends ItemRetrieverResponse<T> {
   scannedCount: number;
   timesScanned: number;
 }
 
-export interface QueryResponse<T> extends DocumentRetrieverResponse<T> {
+export interface QueryResponse<T> extends ItemRetrieverResponse<T> {
   queriedCount: number;
   timesQueried: number;
 }
@@ -43,7 +43,7 @@ export interface UnprocessedItems<T> {
   unprocessedItems: T[];
 }
 export interface ModelGetSettings {
-  return?: 'document' | 'request';
+  return?: 'item' | 'request';
   attributes?: string[];
   consistent?: boolean;
 }
@@ -55,31 +55,31 @@ export interface ModelBatchPutSettings {
   return?: 'response' | 'request';
 }
 export interface ModelUpdateSettings {
-  return?: 'document' | 'request';
+  return?: 'item' | 'request';
   condition?: Condition;
   returnValues?: DynamoDB.ReturnValue;
 }
-export interface ModelBatchGetDocumentsResponse<T> extends DocumentArray<T> {
+export interface ModelBatchGetItemsResponse<T> extends ItemArray<T> {
   unprocessedKeys: ObjectType[];
 }
 export interface ModelBatchGetSettings {
-  return?: 'documents' | 'request';
+  return?: 'items' | 'request';
   attributes?: string[];
 }
 export interface ModelBatchDeleteSettings {
   return?: 'response' | 'request';
 }
 
-export interface DocumentSaveSettings {
+export interface ItemSaveSettings {
   overwrite?: boolean;
-  return?: 'request' | 'document';
+  return?: 'request' | 'item';
 }
 export type UpdatePartial<T> =
   | Partial<T>
   | { $SET: Partial<T> }
   | { $ADD: Partial<T> }
   | { $REMOVE: Partial<T> }
-    | { $DELETE: Partial<T> };
+  | { $DELETE: Partial<T> };
 
 export interface SerializerOptions {
   include?: string[];
@@ -87,13 +87,13 @@ export interface SerializerOptions {
   modify?: (serialized: ObjectType, original: ObjectType) => ObjectType;
 }
 
-export type Document<T> = {
-  populate(): Promise<Document<T>>;
-  populate(callback: CallbackType<Document<T>, any>): void;
-  populate(settings: PopulateSettings): Promise<Document<T>>;
+export type Item<T> = {
+  populate(): Promise<Item<T>>;
+  populate(callback: CallbackType<Item<T>, any>): void;
+  populate(settings: PopulateSettings): Promise<Item<T>>;
   populate(
     settings: PopulateSettings,
-    callback: CallbackType<Document<T>, any>,
+    callback: CallbackType<Item<T>, any>,
   ): void;
   serialize(nameOrOptions: SerializerOptions | string): ObjectType;
   toJSON(): ObjectType;
@@ -101,35 +101,27 @@ export type Document<T> = {
 } & T;
 
 export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
-  query(condition?: ConditionInitializer): Query<Document<Data>, Key>;
+  query(condition?: ConditionInitializer): Query<Item<Data>, Key>;
 
-  scan(condition?: ConditionInitializer): Scan<Document<Data>, Key>;
+  scan(condition?: ConditionInitializer): Scan<Item<Data>, Key>;
 
+  batchGet(keys: Key[]): Promise<ModelBatchGetItemsResponse<Item<Data>>>;
   batchGet(
     keys: Key[],
-  ): Promise<ModelBatchGetDocumentsResponse<Document<Data>>>;
-  batchGet(
-    keys: Key[],
-    callback: CallbackType<
-      ModelBatchGetDocumentsResponse<Document<Data>>,
-      any
-    >,
+    callback: CallbackType<ModelBatchGetItemsResponse<Item<Data>>, any>,
   ): void;
   batchGet(
     keys: Key[],
     settings: ModelBatchGetSettings & {
-      return: 'documents';
+      return: 'items';
     },
-  ): Promise<ModelBatchGetDocumentsResponse<Document<Data>>>;
+  ): Promise<ModelBatchGetItemsResponse<Item<Data>>>;
   batchGet(
     keys: Key[],
     settings: ModelBatchGetSettings & {
-      return: 'documents';
+      return: 'items';
     },
-    callback: CallbackType<
-      ModelBatchGetDocumentsResponse<Document<Data>>,
-      any
-    >,
+    callback: CallbackType<ModelBatchGetItemsResponse<Item<Data>>, any>,
   ): void;
   batchGet(
     keys: Key[],
@@ -146,37 +138,37 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
   ): void;
 
   batchPut(
-    documents: OptionalOmit<Data, DefaultFields>[],
-  ): Promise<UnprocessedItems<Document<Data>>>;
+    items: OptionalOmit<Data, DefaultFields>[],
+  ): Promise<UnprocessedItems<Item<Data>>>;
   batchPut(
-    documents: OptionalOmit<Data, DefaultFields>[],
-    callback: CallbackType<UnprocessedItems<Document<Data>>, any>,
+    items: OptionalOmit<Data, DefaultFields>[],
+    callback: CallbackType<UnprocessedItems<Item<Data>>, any>,
   ): void;
   batchPut(
-    documents: OptionalOmit<Data, DefaultFields>[],
+    items: OptionalOmit<Data, DefaultFields>[],
     settings: ModelBatchPutSettings & {
       return: 'request';
     },
   ): Promise<DynamoDB.BatchWriteItemInput>;
   batchPut(
-    documents: OptionalOmit<Data, DefaultFields>[],
+    items: OptionalOmit<Data, DefaultFields>[],
     settings: ModelBatchPutSettings & {
       return: 'request';
     },
     callback: CallbackType<DynamoDB.BatchWriteItemInput, any>,
   ): void;
   batchPut(
-    documents: OptionalOmit<Data, DefaultFields>[],
+    items: OptionalOmit<Data, DefaultFields>[],
     settings: ModelBatchPutSettings & {
       return: 'response';
     },
-  ): Promise<UnprocessedItems<Document<Data>>>;
+  ): Promise<UnprocessedItems<Item<Data>>>;
   batchPut(
-    documents: OptionalOmit<Data, DefaultFields>[],
+    items: OptionalOmit<Data, DefaultFields>[],
     settings: ModelBatchPutSettings & {
       return: 'response';
     },
-    callback: CallbackType<UnprocessedItems<Document<Data>>, any>,
+    callback: CallbackType<UnprocessedItems<Item<Data>>, any>,
   ): void;
 
   batchDelete(keys: Key[]): Promise<UnprocessedItems<Key>>;
@@ -211,28 +203,28 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     callback: CallbackType<DynamoDB.BatchWriteItemInput, any>,
   ): void;
 
-  update(obj: Data): Promise<Document<Data>>;
-  update(obj: Data, callback: CallbackType<Document<Data>, any>): void;
-  update(keyObj: Key, updateObj: UpdatePartial<Data>): Promise<Document<Data>>;
+  update(obj: Data): Promise<Item<Data>>;
+  update(obj: Data, callback: CallbackType<Item<Data>, any>): void;
+  update(keyObj: Key, updateObj: UpdatePartial<Data>): Promise<Item<Data>>;
   update(
     keyObj: Key,
     updateObj: UpdatePartial<Data>,
-    callback: CallbackType<Document<Data>, any>,
+    callback: CallbackType<Item<Data>, any>,
   ): void;
   update(
     keyObj: Key,
     updateObj: UpdatePartial<Data>,
     settings: ModelUpdateSettings & {
-      return: 'document';
+      return: 'item';
     },
-  ): Promise<Document<Data>>;
+  ): Promise<Item<Data>>;
   update(
     keyObj: Key,
     updateObj: UpdatePartial<Data>,
     settings: ModelUpdateSettings & {
-      return: 'document';
+      return: 'item';
     },
-    callback: CallbackType<Document<Data>, any>,
+    callback: CallbackType<Item<Data>, any>,
   ): void;
   update(
     keyObj: Key,
@@ -250,36 +242,36 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     callback: CallbackType<DynamoDB.UpdateItemInput, any>,
   ): void;
 
-  create(document: OptionalOmit<Data, DefaultFields>): Promise<Document<Data>>;
+  create(item: OptionalOmit<Data, DefaultFields>): Promise<Item<Data>>;
   create(
-    document: OptionalOmit<Data, DefaultFields>,
-    callback: CallbackType<Document<Data>, any>,
+    item: OptionalOmit<Data, DefaultFields>,
+    callback: CallbackType<Item<Data>, any>,
   ): void;
   create(
-    document: OptionalOmit<Data, DefaultFields>,
-    settings: DocumentSaveSettings & {
+    item: OptionalOmit<Data, DefaultFields>,
+    settings: ItemSaveSettings & {
       return: 'request';
     },
   ): Promise<DynamoDB.PutItemInput>;
   create(
-    document: OptionalOmit<Data, DefaultFields>,
-    settings: DocumentSaveSettings & {
+    item: OptionalOmit<Data, DefaultFields>,
+    settings: ItemSaveSettings & {
       return: 'request';
     },
     callback: CallbackType<DynamoDB.PutItemInput, any>,
   ): void;
   create(
-    document: OptionalOmit<Data, DefaultFields>,
-    settings: DocumentSaveSettings & {
-      return: 'document';
+    item: OptionalOmit<Data, DefaultFields>,
+    settings: ItemSaveSettings & {
+      return: 'item';
     },
-  ): Promise<Document<Data>>;
+  ): Promise<Item<Data>>;
   create(
-    document: OptionalOmit<Data, DefaultFields>,
-    settings: DocumentSaveSettings & {
-      return: 'document';
+    item: OptionalOmit<Data, DefaultFields>,
+    settings: ItemSaveSettings & {
+      return: 'item';
     },
-    callback: CallbackType<Document<Data>, any>,
+    callback: CallbackType<Item<Data>, any>,
   ): void;
 
   delete(key: Key): Promise<void>;
@@ -311,20 +303,20 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
     callback: CallbackType<void, any>,
   ): void;
 
-  get(key: Key): Promise<Document<Data>>;
-  get(key: Key, callback: CallbackType<Document<Data>, any>): void;
+  get(key: Key): Promise<Item<Data>>;
+  get(key: Key, callback: CallbackType<Item<Data>, any>): void;
   get(
     key: Key,
     settings: ModelGetSettings & {
-      return: 'document';
+      return: 'item';
     },
-  ): Promise<Document<Data>>;
+  ): Promise<Item<Data>>;
   get(
     key: Key,
     settings: ModelGetSettings & {
-      return: 'document';
+      return: 'item';
     },
-    callback: CallbackType<Document<Data>, any>,
+    callback: CallbackType<Item<Data>, any>,
   ): void;
   get(
     key: Key,
@@ -343,7 +335,7 @@ export interface Model<Data, Key, DefaultFields extends keyof any = ''> {
   transaction: TransactionType<Data, Key>;
 
   serializeMany(
-    documentsArray: Data[],
+    itemsArray: Data[],
     nameOrOptions: SerializerOptions | string,
   ): ObjectType[];
 }
@@ -409,7 +401,7 @@ export interface GetTransaction<Key> {
   (key: Key, settings?: ModelGetSettings): GetTransactionResult;
   (
     key: Key,
-    settings: ModelGetSettings & { return: 'document' },
+    settings: ModelGetSettings & { return: 'item' },
   ): GetTransactionResult;
   (
     key: Key,
@@ -417,19 +409,16 @@ export interface GetTransaction<Key> {
   ): GetTransactionResult;
 }
 export interface CreateTransaction<Data> {
-  (document: Partial<Data>): CreateTransactionResult;
+  (item: Partial<Data>): CreateTransactionResult;
   (
-    document: Partial<Data>,
-    settings: DocumentSaveSettings & { return: 'request' },
+    item: Partial<Data>,
+    settings: ItemSaveSettings & { return: 'request' },
   ): CreateTransactionResult;
   (
-    document: Partial<Data>,
-    settings: DocumentSaveSettings & { return: 'document' },
+    item: Partial<Data>,
+    settings: ItemSaveSettings & { return: 'item' },
   ): CreateTransactionResult;
-  (
-    document: Partial<Data>,
-    settings?: DocumentSaveSettings,
-  ): CreateTransactionResult;
+  (item: Partial<Data>, settings?: ItemSaveSettings): CreateTransactionResult;
 }
 export interface DeleteTransaction<Key> {
   (key: Key): DeleteTransactionResult;
@@ -449,7 +438,7 @@ export interface UpdateTransaction<Key, Data> {
   (
     keyObj: Key,
     updateObj: UpdatePartial<Data>,
-    settings: ModelUpdateSettings & { return: 'document' },
+    settings: ModelUpdateSettings & { return: 'item' },
   ): UpdateTransactionResult;
   (
     keyObj: Key,
