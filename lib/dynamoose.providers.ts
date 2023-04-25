@@ -44,12 +44,10 @@ export function createDynamooseAsyncProviders(
         } else {
           schema = object as ModelDefinition['schema'];
         }
-        const tableName =
-          modelDefinition?.tableName || model.tableName || model.name;
         const options: ModelTableOptions = modelDefinition?.options || model.options || {};
         const serializers = modelDefinition?.serializers || model.serializers;
 
-        options.tableName = tableName
+        options.tableName = model.tableName || model.name
 
         const modelInstance = dynamoose.model(model.name, schema, options);
         if (serializers) {
