@@ -1,5 +1,6 @@
 import { flatten } from '@nestjs/common';
 import * as dynamoose from 'dynamoose';
+import { ModelTableOptions } from 'dynamoose/dist/Model'
 import { getModelToken } from './common/dynamoose.utils';
 import { DYNAMOOSE_INITIALIZATION } from './dynamoose.constants';
 import { ModelDefinition } from './interfaces';
@@ -10,7 +11,7 @@ export function createDynamooseProviders(models: ModelDefinition[] = []) {
     provide: getModelToken(model.name),
     useFactory: () => {
       const modelInstance = dynamoose.model(
-        model.tableName || model.name,
+        model.name,
         model.schema,
         model.options,
       );
@@ -45,10 +46,12 @@ export function createDynamooseAsyncProviders(
         }
         const tableName =
           modelDefinition?.tableName || model.tableName || model.name;
-        const options = modelDefinition?.options || model.options;
+        const options: ModelTableOptions = modelDefinition?.options || model.options || {};
         const serializers = modelDefinition?.serializers || model.serializers;
 
-        const modelInstance = dynamoose.model(tableName, schema, options);
+        options.tableName = tableName
+
+        const modelInstance = dynamoose.model(model.name, schema, options);
         if (serializers) {
           Object.entries(serializers).forEach(([key, value]) => {
             modelInstance.serializer.add(key, value);
