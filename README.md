@@ -114,8 +114,11 @@ import { UserService } from './user.service';
   imports: [
     DynamooseModule.forFeature([{
       name: 'User',
-      tableName: 'user',
-      schema: UserSchema }]),
+      schema: UserSchema,
+      options: {
+        tableName: 'user',
+      },
+    }]),
   ],
   providers: [
     UserService,
@@ -125,7 +128,7 @@ import { UserService } from './user.service';
 export class UserModule {}
 ```
 
-> `tableName` is optional. If it is not provided, `name` will be used as the table name.
+> `options.tableName` is optional. If it is not provided, `name` will be used as the table name.
 
 There is also `forFeatureAsync(factories?: AsyncModelFactory[])` if you want to use a factory with dependency injection. Notes that the first parameter of the `useFactory` callback is reserved for future use, so please just add `_,` to ignore it.
 
@@ -144,8 +147,10 @@ import { UserService } from './user.service';
         name: 'User',
         useFactory: (_, configService: ConfigService) => {
           return {
-            tableName: configService.get<string>('USER_TABLE_NAME'),
             schema: UserSchema,
+            options: {
+              tableName: configService.get<string>('USER_TABLE_NAME'),
+            },
           };
         },
         inject: [ConfigService],

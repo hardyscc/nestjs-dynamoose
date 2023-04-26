@@ -3,7 +3,7 @@ import { ModelDefinition } from './model-definition.interface';
 
 export interface AsyncModelFactory
   extends Pick<ModuleMetadata, 'imports'>,
-    Pick<ModelDefinition, 'name' | 'tableName' | 'options' | 'serializers'> {
+    Pick<ModelDefinition, 'name' | 'options' | 'serializers'> {
   useFactory: (
     ...args: any[]
   ) =>
