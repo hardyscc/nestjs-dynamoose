@@ -22,7 +22,7 @@
     "@commitlint/config-angular": "18.0.0",
     "@nestjs/common": "10.2.7",
     "@nestjs/core": "10.2.7",
-    "@types/node": "18.18.6",
+    "@types/node": "18.18.7",
     "@typescript-eslint/eslint-plugin": "6.8.0",
     "@typescript-eslint/parser": "6.8.0",
     "dynamoose": "3.2.1",
