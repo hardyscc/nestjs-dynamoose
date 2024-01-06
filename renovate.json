@@ -1,6 +1,10 @@
 {
-  "timezone": "Asia/Hong_Kong",
-  "schedule": "before 6am every weekend",
-  "automerge": true,
-  "extends": ["config:base"]
+  "extends": ["config:base", ":dependencyDashboard"],
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true
+    }
+  ]
 }
