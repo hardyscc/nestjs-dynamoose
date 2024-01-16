@@ -65,6 +65,7 @@ export interface ModelBatchGetItemsResponse<T> extends ItemArray<T> {
 export interface ModelBatchGetSettings {
   return?: 'items' | 'request';
   attributes?: string[];
+  consistent?: boolean;
 }
 export interface ModelBatchDeleteSettings {
   return?: 'response' | 'request';
