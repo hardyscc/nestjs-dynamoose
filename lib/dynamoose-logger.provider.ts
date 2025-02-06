@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import { LoggerService } from '@nestjs/common';
 
 type Message = {
