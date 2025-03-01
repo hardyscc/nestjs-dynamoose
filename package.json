@@ -24,7 +24,7 @@
     "@nestjs/core": "11.0.10",
     "@types/node": "22.13.5",
     "dynamoose": "4.0.3",
-    "eslint": "9.20.1",
+    "eslint": "9.21.0",
     "eslint-config-prettier": "10.0.2",
     "eslint-plugin-prettier": "5.2.3",
     "globals": "15.15.0",
