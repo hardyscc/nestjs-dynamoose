@@ -26,7 +26,7 @@
     "dynamoose": "4.1.5",
     "eslint": "9.39.2",
     "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-prettier": "5.5.4",
+    "eslint-plugin-prettier": "5.5.5",
     "globals": "16.5.0",
     "husky": "9.1.7",
     "lint-staged": "15.5.2",
