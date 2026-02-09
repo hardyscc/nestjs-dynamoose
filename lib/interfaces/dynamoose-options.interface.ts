@@ -21,8 +21,10 @@ export interface DynamooseOptionsFactory {
     | DynamooseModuleOptions;
 }
 
-export interface DynamooseModuleAsyncOptions
-  extends Pick<ModuleMetadata, 'imports'> {
+export interface DynamooseModuleAsyncOptions extends Pick<
+  ModuleMetadata,
+  'imports'
+> {
   useExisting?: Type<DynamooseOptionsFactory>;
   useClass?: Type<DynamooseOptionsFactory>;
   useFactory?: (

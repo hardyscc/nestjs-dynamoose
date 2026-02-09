@@ -2,7 +2,8 @@ import { ModuleMetadata } from '@nestjs/common/interfaces';
 import { ModelDefinition } from './model-definition.interface';
 
 export interface AsyncModelFactory
-  extends Pick<ModuleMetadata, 'imports'>,
+  extends
+    Pick<ModuleMetadata, 'imports'>,
     Pick<ModelDefinition, 'name' | 'options' | 'serializers'> {
   useFactory: (
     ...args: any[]
