@@ -20,8 +20,8 @@
   "devDependencies": {
     "@commitlint/cli": "19.8.1",
     "@commitlint/config-angular": "19.8.1",
-    "@nestjs/common": "11.1.28",
-    "@nestjs/core": "11.1.28",
+    "@nestjs/common": "11.1.29",
+    "@nestjs/core": "11.1.29",
     "@types/node": "22.20.1",
     "dynamoose": "4.2.0",
     "eslint": "9.39.5",
