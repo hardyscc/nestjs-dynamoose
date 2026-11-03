@@ -22,6 +22,14 @@
 $ npm install --save nestjs-dynamoose dynamoose
 ```
 
+### Compatibility
+
+- NestJS 8, 9, 10, 11 and 12
+- Dynamoose 3.2+ and 4
+- RxJS 7.1+
+
+NestJS 12 is published as ESM only. Using it from a CommonJS application requires a Node.js version with `require(esm)` support (20.19+ or 22.12+).
+
 ## Example Project
 
 A [AWS NestJS Starter](https://github.com/hardyscc/aws-nestjs-starter) project has been created to demo the usage of this library.
