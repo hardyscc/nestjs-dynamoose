@@ -1,5 +1,4 @@
-import { LoggerService } from '@nestjs/common';
-import { ModuleMetadata, Type } from '@nestjs/common/interfaces';
+import { LoggerService, ModuleMetadata, Type } from '@nestjs/common';
 import { DynamoDB } from '@aws-sdk/client-dynamodb';
 import { TableOptionsOptional } from 'dynamoose/dist/Table';
 
