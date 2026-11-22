@@ -1,6 +1,6 @@
+import { DynamoDB } from '@aws-sdk/client-dynamodb';
 import { LoggerService } from '@nestjs/common';
 import { ModuleMetadata, Type } from '@nestjs/common/interfaces';
-import { DynamoDB } from '@aws-sdk/client-dynamodb';
 import { TableOptionsOptional } from 'dynamoose/dist/Table';
 
 export interface DynamooseModuleOptions {
@@ -17,8 +17,7 @@ export interface DynamooseModuleOptions {
 
 export interface DynamooseOptionsFactory {
   createDynamooseOptions():
-    | Promise<DynamooseModuleOptions>
-    | DynamooseModuleOptions;
+    Promise<DynamooseModuleOptions> | DynamooseModuleOptions;
 }
 
 export interface DynamooseModuleAsyncOptions extends Pick<
