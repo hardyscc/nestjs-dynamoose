@@ -172,9 +172,9 @@ export class UserService extends TransactionSupport {
 ### Core Dependencies
 
 - **dynamoose:** ^3.2.0 || ^4.0.0 - DynamoDB ODM
-- **@nestjs/common & @nestjs/core:** ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0
+- **@nestjs/common & @nestjs/core:** ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0
 - **@aws-sdk/client-dynamodb:** ^3.0.0
-- **rxjs:** ^6.0.0 || ^7.0.0
+- **rxjs:** ^7.1.0
 - **reflect-metadata:** ^0.1.13 || ^0.2.0
 
 ### Dev Dependencies Philosophy
